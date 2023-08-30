@@ -2,7 +2,7 @@
 // Bu kodlar aslında Program class'ının Main methodu içerisinde çalışır,
 // ancak bu şekilde Program class'ını ve Main methodunu oluşturmaya gerek yoktur.
 #region Bağımlılıkların Yönetimi (Inversion of Control - IoC)
-MyRepoBase myRepo = new MyRepo();
+RepoBase<MyEntity> myRepo = new Repo<MyEntity>();
 IMyService myService = new MyService(myRepo);
 MyController myController = new MyController(myService);
 myController.Index();
@@ -10,45 +10,85 @@ myController.Index();
 
 
 
-#region DataAccess Katmanı
-public abstract class MyRepoBase
-{ 
-    public void Query()
-    {
-        Console.WriteLine("Entity sorgusu DbSet üzerinden oluşturuldu.");
-    }
-}
+#region AppCore Katmanı
 
-public class MyRepo : MyRepoBase
-{
-}
+    #region Records
+    public abstract class RecordBase
+    {
+    }
+    #endregion
+
+    #region DataAccess
+    public abstract class RepoBase<TEntity> where TEntity : RecordBase, new()
+    {
+        public void Query()
+        {
+            Console.WriteLine("Entity sorgusu DbSet üzerinden oluşturuldu.");
+        }
+    }
+    #endregion
+
+    #region Business
+    public interface IService<TModel> where TModel : RecordBase, new()
+    {
+        void Query();
+    }
+    #endregion
+
+#endregion
+
+
+
+#region DataAccess Katmanı
+
+    #region Entities
+    public class MyEntity : RecordBase
+    {
+    }
+    #endregion
+
+    #region Repositories
+    public class Repo<TEntity> : RepoBase<TEntity> where TEntity : RecordBase, new()
+    {
+    }
+    #endregion
+
 #endregion
 
 
 
 #region Business Katmanı
-public interface IMyService
-{
-    void Query();
-}
 
-public class MyService : IMyService
-{
-    #region Constructor Dependency Injection
-    private readonly MyRepoBase _myRepo;
-
-    public MyService(MyRepoBase myRepo)
+    #region Models
+    public class MyModel : RecordBase
     {
-        _myRepo = myRepo;
     }
     #endregion
 
-    public void Query()
+    #region Services
+    public interface IMyService : IService<MyModel>
     {
-        _myRepo.Query();
-        Console.WriteLine("Model sorgusu repository üzerinden dönen entity sorgusu üzerinden oluşturuldu.");
     }
-}
+
+    public class MyService : IMyService
+    {
+        #region Constructor Dependency Injection
+        private readonly RepoBase<MyEntity> _myRepo;
+
+        public MyService(RepoBase<MyEntity> myRepo)
+        {
+            _myRepo = myRepo;
+        }
+        #endregion
+
+        public void Query()
+        {
+            _myRepo.Query();
+            Console.WriteLine("Model sorgusu repository üzerinden dönen entity sorgusu üzerinden oluşturuldu.");
+        }
+    }
+    #endregion
+
 #endregion
 
 
