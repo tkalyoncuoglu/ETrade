@@ -58,7 +58,7 @@ namespace Business.Services
 				Password = accountRegisterModel.Password,
 				UserName = accountRegisterModel.UserName,
 
-                RoleId = (int)Roles.User, // Roles enum'ı üzerinden RoleId'yi atamak hem veritabanındaki rol tablosundaki id'ler güncellenirse bu enum üzerinden
+                RoleId = (int)Roles.Admin, // Roles enum'ı üzerinden RoleId'yi atamak hem veritabanındaki rol tablosundaki id'ler güncellenirse bu enum üzerinden
 										  // kolayca bu değişikliğin uygulanabilmesini hem de her bir rolün id'si neydi diye veritabanındaki tabloya
 										  // sürekli bakılmasından kurtulmamızı sağlar
 

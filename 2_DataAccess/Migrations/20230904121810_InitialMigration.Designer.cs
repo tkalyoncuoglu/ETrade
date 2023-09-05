@@ -3,6 +3,7 @@ using System;
 using DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace _2_DataAccess.Migrations
 {
     [DbContext(typeof(ETradeContext))]
-    partial class ETradeContextModelSnapshot : ModelSnapshot
+    [Migration("20230904121810_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -130,22 +133,15 @@ namespace _2_DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Entities.ProductStore", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(0);
 
                     b.Property<int>("StoreId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(1);
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
+                    b.HasKey("ProductId", "StoreId");
 
                     b.HasIndex("StoreId");
 

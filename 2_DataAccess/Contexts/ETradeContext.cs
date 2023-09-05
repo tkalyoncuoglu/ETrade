@@ -19,7 +19,10 @@ namespace DataAccess.Contexts
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
 
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=mydatabase.db");
+        }
 
         public ETradeContext(DbContextOptions options) : base(options) // options parametresi MvcWebUI katmanındaki Program.cs IoC Container'ında AddDbContext methodu ile
                                                                        // bağımlılığı yönetilen ve appsettings.json veya appsettings.Development.json dosyalarında
@@ -51,11 +54,7 @@ namespace DataAccess.Contexts
                                                                            // default cascade'dir (bir kayıt silindiğinde ilişkili tablolarındaki verileri zincirleme otomatik silinir),
                                                                            // uygun olan ilişkileri no action yapmaktır ki ilişkiler bu method içerisinde değiştirilmelidir
         {
-            modelBuilder.Entity<ProductStore>().HasKey(ps => new { ps.ProductId, ps.StoreId });
-            // bir üst satırda methodlar kullanıldıkça farklı methodların kullanılmasını sağlayan yapıya Fluent API denir,
-            // SOLID prensipleri gereği aşağıdaki konfigürasyonu başka bir class üzerinden gerçekleştirmek daha uygun olacaktır,
-            // ürün ve mağaza arasındaki many to many ilişki için ps delegesi üzerinden hem ProductStore entity'sindeki ProductId'yi hem de StoreId'yi beraber primary key yaptık
-
+            
             modelBuilder.Entity<Product>() // CategoryId foreign key'i Product'ta olduğu için 1 to many ilişkiyi ürün üzerinden ilişkili kayıt silme kuralını no action olarak yeniden tanımlıyoruz
                 .HasOne(p => p.Category) // 1 ürünün 1 kategorisi olabilir, p: product
                 .WithMany(c => c.Products) // 1 kategorinin 1'den çok ürünü olabilir, c: category
@@ -80,11 +79,11 @@ namespace DataAccess.Contexts
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<UserDetail>() // kullanıcı kullanıcı detayı 1 to 1 ilişkisi için UserId foreign key'i UserDetail'da olduğundan kullanıcı ile ilişkisini oluşturuyoruz
-                .HasOne(ud => ud.User) // ud: user detail
-                .WithOne(u => u.UserDetail)
-                .HasForeignKey<UserDetail>(ud => ud.UserId) // eğer burada olduğu gibi lambda expression üzerinden delegenin özelliklerine ulaşamazsak delegenin generic tip'ini method adından sonra belirtmeliyiz
-                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.UserDetail)
+                .WithOne(r => r.User).HasForeignKey<UserDetail>(ud => ud.UserId);
+                
+
 
             modelBuilder.Entity<UserDetail>() // kullanıcı detayı ülke 1 to many ilişkisi için CountryId foreign key'i UserDetail'da olduğundan ülke ile ilişkisini oluşturuyoruz
 				.HasOne(ud => ud.Country) 

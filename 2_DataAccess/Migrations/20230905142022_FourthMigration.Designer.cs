@@ -3,46 +3,39 @@ using System;
 using DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace _2DataAccess.Migrations
+namespace _2_DataAccess.Migrations
 {
     [DbContext(typeof(ETradeContext))]
-    [Migration("20230825123852_v1")]
-    partial class v1
+    [Migration("20230905142022_FourthMigration")]
+    partial class FourthMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
 
             modelBuilder.Entity("DataAccess.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -53,20 +46,18 @@ namespace _2DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CountryId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -79,17 +70,15 @@ namespace _2DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -100,40 +89,38 @@ namespace _2DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("image");
 
                     b.Property<string>("ImageExtension")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("StockAmount")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -146,15 +133,22 @@ namespace _2DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Entities.ProductStore", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Guid")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ProductId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("StoreId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
+                        .HasColumnType("INTEGER");
 
-                    b.HasKey("ProductId", "StoreId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("StoreId");
 
@@ -165,17 +159,15 @@ namespace _2DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -186,20 +178,18 @@ namespace _2DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsVirtual")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -210,28 +200,26 @@ namespace _2DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -242,39 +230,49 @@ namespace _2DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Entities.UserDetail", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(750)
-                        .HasColumnType("nvarchar(750)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("CityId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CountryId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Guid")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Sex")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
-                    b.HasKey("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
                     b.HasIndex("CountryId");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("UserDetails");
@@ -348,7 +346,7 @@ namespace _2DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithOne("UserDetail")
                         .HasForeignKey("DataAccess.Entities.UserDetail", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("City");

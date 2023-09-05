@@ -83,7 +83,7 @@ builder.Services.AddSession(config => // projeye config action delegesi konfigür
 string connectionString = builder.Configuration.GetConnectionString("ETradeDb"); // appsettings.json veya appsettings.Development.json dosyalarýndaki isim üzerinden atanan
                                                                                  // veritabaný baðlantý string'ini döner.
 
-builder.Services.AddDbContext<ETradeContext>(options => options.UseSqlServer(connectionString)); // projede herhangi bir class'ta ETradeContext tipinde 
+builder.Services.AddDbContext<ETradeContext>(); // projede herhangi bir class'ta ETradeContext tipinde 
                                                                                                  // constructor injection yapýldýðýnda ETradeContext objesini new'leyerek
                                                                                                  // o class'a enjekte eder.       
 
@@ -91,7 +91,9 @@ builder.Services.AddScoped(typeof(RepoBase<>), typeof(Repo<>)); // projede herha
                                                                 // entity tipindeki Repo objesini new'leyerek o class'a enjekte eder.
 
 
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<IProductStoreRepository, ProductStoreRepository>();
 builder.Services.AddScoped<IProductService, ProductService>(); // projede herhangi bir class'ta IProductService tipinde constructor injection yapýldýðýnda
                                                                // ProductService objesini new'leyerek o class'a enjekte eder.
 

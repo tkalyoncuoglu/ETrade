@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace _2DataAccess.Migrations
+namespace _2_DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class v1 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,11 +15,11 @@ namespace _2DataAccess.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Guid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,10 +30,10 @@ namespace _2DataAccess.Migrations
                 name: "Countries",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Guid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,10 +44,10 @@ namespace _2DataAccess.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Guid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,11 +58,11 @@ namespace _2DataAccess.Migrations
                 name: "Stores",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    IsVirtual = table.Column<bool>(type: "bit", nullable: false),
-                    Guid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    IsVirtual = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,17 +73,17 @@ namespace _2DataAccess.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    UnitPrice = table.Column<double>(type: "float", nullable: false),
-                    StockAmount = table.Column<int>(type: "int", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    UnitPrice = table.Column<double>(type: "REAL", nullable: false),
+                    StockAmount = table.Column<int>(type: "INTEGER", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CategoryId = table.Column<int>(type: "INTEGER", nullable: true),
                     Image = table.Column<byte[]>(type: "image", nullable: true),
-                    ImageExtension = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
-                    Guid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ImageExtension = table.Column<string>(type: "TEXT", maxLength: 5, nullable: true),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -99,11 +99,11 @@ namespace _2DataAccess.Migrations
                 name: "Cities",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false),
-                    Guid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    CountryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,13 +119,13 @@ namespace _2DataAccess.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    Guid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
+                    Password = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -141,8 +141,8 @@ namespace _2DataAccess.Migrations
                 name: "ProductStores",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    StoreId = table.Column<int>(type: "int", nullable: false)
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    StoreId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -163,17 +163,20 @@ namespace _2DataAccess.Migrations
                 name: "UserDetails",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Sex = table.Column<int>(type: "int", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Sex = table.Column<int>(type: "INTEGER", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
+                    Phone = table.Column<string>(type: "TEXT", maxLength: 25, nullable: true),
+                    Address = table.Column<string>(type: "TEXT", maxLength: 750, nullable: false),
+                    CountryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CityId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Guid = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDetails", x => x.UserId);
+                    table.PrimaryKey("PK_UserDetails", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserDetails_Cities_CityId",
                         column: x => x.CityId,
@@ -188,7 +191,8 @@ namespace _2DataAccess.Migrations
                         name: "FK_UserDetails_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -225,6 +229,12 @@ namespace _2DataAccess.Migrations
                 name: "IX_UserDetails_Email",
                 table: "UserDetails",
                 column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserDetails_UserId",
+                table: "UserDetails",
+                column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

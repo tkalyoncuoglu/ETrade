@@ -125,7 +125,7 @@ namespace Business.Models
 
 
         [DisplayName("Stores")]
-        public List<int> StoreIds { get; set; } // kullanıcıdan ürün ekleme ve güncelleme işlemlerinde mağaza verilerini alırken view'da list box kullanarak
+        public List<int> StoreIds { get; set; } = new List<int>();// kullanıcıdan ürün ekleme ve güncelleme işlemlerinde mağaza verilerini alırken view'da list box kullanarak
                                                 // mağaza listesi üzerinden kullanıcının seçtiği mağazaların id'lerini bu özellikte saklıyoruz,
                                                 // eğer bir ürünün mutlaka bir veya daha çok mağazası olacaksa Required attribute'u kullanılmalıdır
 

@@ -35,7 +35,7 @@ namespace MvcWebUI.Controllers
         public IActionResult Index() // tarayıcıda ~/Products/Index adresi girilerek veya herhangi bir view'da (örneğin Views -> Shared klasörü altındaki _Layout.cshtml)
                                      // bu adres için link oluşturularak çağrılabilir.
         {
-            List<ProductModel> products = _productService.Query().ToList(); // ToList LINQ (Language Integrated Query) methodu sorgunun çalıştırılmasını ve sonucunun IQueryable'da kullanılan tip
+            List<ProductModel> products = _productService.Get(); // ToList LINQ (Language Integrated Query) methodu sorgunun çalıştırılmasını ve sonucunun IQueryable'da kullanılan tip
                                                                             // üzerinden bir liste olarak dönmesini sağlar.
 
             //return View("ProductList", products); // *1
@@ -48,48 +48,14 @@ namespace MvcWebUI.Controllers
 
 
         // Authorize attribute'u yazılmadığı için controller'ın üzerindeki Authorize geçerli olacaktır.
-        public IActionResult Details(int id) // örneğin tarayıcıda ~/Products/Details/1 adresi girilerek veya herhangi bir view'da (örneğin Views -> Products -> Index.cshtml)
-                                             // bu adres için id parametresini de gönderen bir link oluşturularak çağrılabilir.
+        public IActionResult Details(int id) 
         {
-            ProductModel product = _productService.Query().SingleOrDefault(p => p.Id == id); // parametre olarak bu action'a gönderilen id üzerinden kayıt sorgulanır
-            /*
-            SingleOrDefault LINQ methodu kullanılarak ID üzerinden tek bir kayda ulaşılabilir.
-            SingleOrDefault lambda expression kullanılarak belirtilen koşul veya koşullar üzerinden tek bir kayıt döner,
-            eğer sorgu sonucunda birden çok kayıt dönerse exception fırlatır, eğer belirtilen koşula sahip
-            kayıt bulamazsa null referansı döner.
-            Single, SingleOrDefault yerine kullanılabilir, eğer belirtilen koşula sahip birden çok kayıt bulursa
-            veya kayıt bulamazsa exception fırlatır.
-            */
-            /*
-            SingleOrDefault yerine FirstOrDefault LINQ methodu da kullanılabilir.
-            FirstOrDefault lamda expression kullanılarak belirtilen koşul veya koşullar üzerinden sorgu sonucunda
-            tek kayıt dönse de birden çok kayıt dönse de her zaman ilk kaydı döner,
-            eğer kayıt bulunamazsa null referansı döner.
-            First, FirstOrDefault yerine kullanılabilir, eğer belirtilen koşula sahip kayıt bulunamazsa
-            exception fırlatır.
-            LastOrDefault ve Last methodları da FirstOrDefault ve First methodlarının tersi düşünülerek
-            belirtilen koşul veya koşullara göre bulunan son kayıt üzerinden işleme devam eder.
-            */
-            /*
-            DbContext objesindeki DbSet'ler üzerinden SingleOrDefault'a alternatif olarak Find methodu kullanılabilir ve 
-            parametre olarak bir veya daha fazla anahtar (primary key) kullanılarak tek bir kayda (objeye) ulaşılabilir. 
-            */
-            /*
-            Where LINQ methodu ile kayıtlar lamda expression kullanılarak bir veya daha fazla
-            koşul üzerinden filtrelenerek kolleksiyon olarak geri dönülebilir.
-            Koşullarda && (and), || (or) ile ! (not) operatorleri istenirse bir arada kullanılabilir.
-            Bu operatörler ile oluşturulan koşullar SingleOrDefault, Single, FirstOrDefault, First,
-            LastOrDefault ve Last gibi methodlarda da kullanılabilir.
-            */
-
-            //if (product == null) // bu veya bir alt satırdaki şekilde null kontrolü yapılabilir
-            if (product is null) // eğer sorgu sonucunda kayıt bulunamadıysa
+            ProductModel? product = _productService.Details(id);
+            if (product is null) 
             {
-                //return NotFound(); // 404 HTTP durum kodu üzerinden kaynak bulunamadı HTTP response'u (yanıtı) dönülebilir
-                return View("_Error", "Product not found!"); // alternatif olarak tüm projede tüm controller action'larında alınabilecek hatalar için Views -> Shared klasörü altına
-                                                             // _Error.cshtml paylaşılan view'ı oluşturularak alınan hatalar yazdırılabilir
+                return View("_Error", "Product not found!"); 
             }
-            return View(product); // kayıt bulunduysa Details view'ına model olarak gönderilir
+            return View(product); 
         }
 
 
@@ -201,7 +167,7 @@ namespace MvcWebUI.Controllers
         public IActionResult Edit(int id) // örneğin tarayıcıda ~/Products/Edit/1 adresi girilerek veya herhangi bir view'da (örneğin Views -> Products -> Index.cshtml)
                                           // bu adres için id parametresini de gönderen bir link oluşturularak çağrılabilir.
         {
-            ProductModel product = _productService.Query().SingleOrDefault(p => p.Id == id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
+            ProductModel? product = _productService.Edit(id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
 
             if (product is null) // eğer gelen id'ye göre ürün bulunamadıysa
             {
@@ -291,7 +257,7 @@ namespace MvcWebUI.Controllers
         public IActionResult Delete(int id) // örneğin tarayıcıda ~/Products/Delete/1 adresi girilerek veya herhangi bir view'da (örneğin Views -> Products -> Index.cshtml)
                                             // bu adres için id parametresini de gönderen bir link oluşturularak çağrılabilir.
         {
-            ProductModel product = _productService.Query().SingleOrDefault(p => p.Id == id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
+            ProductModel? product = _productService.Details(id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
 
             if (product is null) // eğer gelen id'ye göre ürün bulunamadıysa
             {
@@ -428,7 +394,7 @@ namespace MvcWebUI.Controllers
 
         public ActionResult GetProductsXmlContent() // tarayıcıda çağrılması: ~/Products/GetProductsXmlContent, XML döndürme işlemleri genelde bu şekilde yapılmaz, web servisler üzerinden döndürülür.
         {
-            List<ProductModel> products = _productService.Query().ToList();
+            List<ProductModel> products = _productService.Get();
             string xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
             xml += "<Products>";
             foreach (ProductModel product in products)

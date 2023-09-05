@@ -1,19 +1,14 @@
 ﻿#nullable disable
 
+using AppCore.Records.Bases;
 using DataAccess.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Entities
 {
-	public class UserDetail // Kullanıcı Detayı, User ile ilişkili olduğu ve kendi Id'si olmayacağı için RecordBase'den miras almamalı,
-						    // User ile arasında 1'e 1 ilişki var, genelde 1'e 1 ilişki veritabanındaki bir tablonun çok sayıda sütununun
-							// iki veya daha fazla tabloya parçalanmasıyla oluşturulur
+	public class UserDetail : RecordBase
 	{
-		[Key]
-		public int UserId { get; set; } // zorunlu, User ile 1 to 1 ilişki olduğu için User'ın Id'sini buraya UserId foreign key'i olarak taşıdık
-
-		public User User { get; set; } // 1 kullanıcı detayı 1 kullanıyıca ait olmalı
-
+		public int UserId { get; set; }
 		public Sex Sex { get; set; }
 
 		[Required]
@@ -34,5 +29,7 @@ namespace DataAccess.Entities
 		public int CityId { get; set; } // şehir id, zorunlu
 
 		public City City { get; set; } // 1 to many ilişki, 1 kullanıcı detayının (1'e 1 ilişki olduğu için kullanıcının) mutlaka 1 şehri olmalı
+	
+		public User User { get; set; }
 	}
 }
