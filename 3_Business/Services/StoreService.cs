@@ -6,16 +6,7 @@ using DataAccess.Repositories;
 
 namespace Business.Services
 {
-    public interface IStoreService 
-    {
-        Result Add(StoreModel model); // Create işlemleri
-        Result Update(StoreModel model); // Update işlemleri
-        Result Delete(int id); // Delete işlemleri
-        StoreModel? Edit(int id);
-        List<StoreModel> GetAll();
-        StoreModel? Details(int id);
-
-    }
+   
 
     public class StoreService : IStoreService
     {
@@ -89,22 +80,13 @@ namespace Business.Services
             return new SuccessResult();
         }
 
-        public List<StoreModel> GetAll()
+        public List<StoreModel> GetList()
         {
             return _storeRepo.OrderBy(s => s.IsVirtual).ThenBy(s => s.Name).GetList().Select(ToStoreModel).ToList();
         }
 
-        public StoreModel? Edit(int id)
-        {
-            var store = _storeRepo.Get(s => s.Id == id); 
-            if (store == null)
-            {
-                return null;
-            }
-            return ToStoreModel(store);
-        }
 
-        public StoreModel? Details(int id)
+        public StoreModel? Get(int id)
         {
             var store = _storeRepo.Get(s => s.Id == id);
             if (store == null)

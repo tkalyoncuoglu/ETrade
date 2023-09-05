@@ -21,14 +21,14 @@ namespace MvcWebUI.Controllers
         // GET: Stores
         public IActionResult Index()
         {
-            List<StoreModel> storeList = _storeService.GetAll(); // Add get list service logic here
+            List<StoreModel> storeList = _storeService.GetList(); // Add get list service logic here
             return View(storeList);
         }
 
         // GET: Stores/Details/5
         public IActionResult Details(int id)
         {
-            StoreModel store = _storeService.Details(id); // Add get item service logic here
+            StoreModel store = _storeService.Get(id); // Add get item service logic here
             if (store == null)
             {
                 return NotFound("Store not found!"); // eğer mağaza bulunamazsa NotFound dönüyoruz ki mesajını Index view'ındaki
@@ -69,7 +69,7 @@ namespace MvcWebUI.Controllers
         // GET: Stores/Edit/5
         public IActionResult Edit(int id)
         {
-            StoreModel store = _storeService.Edit(id); // Add get item service logic here
+            StoreModel store = _storeService.Get(id); // Add get item service logic here
             if (store == null)
             {
                 return NotFound("Store not found!"); // eğer mağaza bulunamazsa NotFound dönüyoruz ki mesajını Index view'ındaki
