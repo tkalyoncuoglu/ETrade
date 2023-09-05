@@ -1,4 +1,5 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Contexts;
+using DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,30 +10,22 @@ namespace DataAccess.Repositories
 {
     public class ReportRepository : IReportRepository
     {
-        private readonly ICategoryRepository _categoryRepository;
 
-        private readonly IProductRepository _productRepository;
+        private readonly ETradeContext _context;
 
-        private readonly IStoreRepository _storeRepository;
-
-        private readonly IProductStoreRepository _productStoreRepository;
-
-        public ReportRepository(ICategoryRepository categoryRepository, IProductRepository productRepository, IStoreRepository storeRepository, IProductStoreRepository productStoreRepository)
+        public ReportRepository(ETradeContext context)
         {
-            _categoryRepository = categoryRepository;
-            _productRepository = productRepository;
-            _storeRepository = storeRepository;
-            _productStoreRepository = productStoreRepository;
+            _context = context;
         }
 
         public List<ReportItem> GetList(ReportFilter filter, bool useInnerJoin = false)
         {
             #region Sorgu oluşturma
-            var productQuery = _productRepository.Queryable; // Products sorgusu
-            var categoryQuery = _categoryRepository.Queryable; // Categories sorgusu,
+            var productQuery = _context.Set<Product>(); // Products sorgusu
+            var categoryQuery = _context.Set<Category>(); // Categories sorgusu,
                                                          // RepoBase'deki Query methodunu Product tipi dışında başka bir tip (örneğin burada Category) tanımlayarak çağırabiliriz.
-            var storeQuery = _storeRepository.Queryable; // Stores sorgusu
-            var productStoreQuery = _productStoreRepository.Queryable; // ProductStores sorgusu
+            var storeQuery = _context.Set<Store>(); // Stores sorgusu
+            var productStoreQuery = _context.Set<ProductStore>(); // ProductStores sorgusu
 
             IQueryable<ReportItem> query;
 

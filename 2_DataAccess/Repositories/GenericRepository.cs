@@ -15,9 +15,6 @@ namespace DataAccess.Repositories
         protected ETradeContext _context;
 
         protected IQueryable<T> _query;
-
-        public IQueryable<T> Queryable => _query;
-
         public GenericRepository(ETradeContext context)
         {
             _context = context;

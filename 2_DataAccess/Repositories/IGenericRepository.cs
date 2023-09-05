@@ -5,7 +5,6 @@ namespace DataAccess.Repositories
 {
     public interface IGenericRepository<T> where T : RecordBase, new()
     {
-        IQueryable<T> Queryable { get; }
         T? Get(Expression<Func<T, bool>> expression);
         List<T> GetList(Expression<Func<T, bool>> expression);
         Task<List<T>> GetListAsync(Expression<Func<T, bool>> expression);
