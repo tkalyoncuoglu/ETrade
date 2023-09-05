@@ -77,7 +77,7 @@ namespace MvcWebUI.Controllers
             // kategori listemizi, listenin tipi (CategoryModel) üzerinden arka planda tutacağımız (yani kullanıcının görmeyeceği) özellik ismini (Id) ve
             // listenin tipi (CategoryModel) üzerinden kullanıcıya göstereceğimiz özellik ismini (Name) belirtiyoruz.
 
-            ViewBag.Stores = new MultiSelectList(_storeService.Query().ToList(), "Id", "Name");
+            ViewBag.Stores = new MultiSelectList(_storeService.GetAll(), "Id", "Name");
             // Tıpkı yukarıda kategori listesini bir drop down list üzerinden kullanıcıya gösterebilmek için bir SelectList oluşturduğumuz ve ViewBag'e attığımız gibi
             // mağazaları da ilgili servisi üzerinden çekip bir MultiSelectList'e doldurup ViewBag'e atıyoruz ki view'da kullanıcı List Box (multiple attribute'lu HTML select tag'i)
             // üzerinden hiç, bir veya daha çok mağaza seçebilsin.
@@ -151,7 +151,7 @@ namespace MvcWebUI.Controllers
             // Create view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.Stores = new MultiSelectList(_storeService.Query().ToList(), "Id", "Name", product.StoreIds);
+            ViewBag.Stores = new MultiSelectList(_storeService.GetAll(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 
@@ -179,7 +179,7 @@ namespace MvcWebUI.Controllers
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden daha önce kaydetmiş olduğu kategorinin
             // CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.StoreIds = new MultiSelectList(_storeService.Query().ToList(), "Id", "Name", product.StoreIds);
+            ViewBag.StoreIds = new MultiSelectList(_storeService.GetAll(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 
@@ -241,7 +241,7 @@ namespace MvcWebUI.Controllers
             // Edit view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.StoreIds = new MultiSelectList(_storeService.Query().ToList(), "Id", "Name", product.StoreIds);
+            ViewBag.StoreIds = new MultiSelectList(_storeService.GetAll(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 

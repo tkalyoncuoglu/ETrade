@@ -78,5 +78,14 @@ namespace DataAccess.Repositories
 
             _context.SaveChanges();
         }
+
+        public GenericRepository<T> ThenBy<TKey>(Expression<Func<T, TKey>> expression)
+        {
+            if(_query is IOrderedQueryable<T> q)
+            {
+                _query = q.ThenBy(expression);
+            }
+            return this;
+        }
     }
 }

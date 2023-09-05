@@ -94,6 +94,8 @@ builder.Services.AddScoped(typeof(RepoBase<>), typeof(Repo<>)); // projede herha
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IProductStoreRepository, ProductStoreRepository>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IProductService, ProductService>(); // projede herhangi bir class'ta IProductService tipinde constructor injection yapýldýðýnda
                                                                // ProductService objesini new'leyerek o class'a enjekte eder.
 

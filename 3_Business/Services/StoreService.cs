@@ -4,18 +4,26 @@ using AppCore.Results;
 using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
+using DataAccess.Repositories;
 
 namespace Business.Services
 {
-    public interface IStoreService : IService<StoreModel>
+    public interface IStoreService 
     {
+        Result Add(StoreModel model); // Create işlemleri
+        Result Update(StoreModel model); // Update işlemleri
+        Result Delete(int id); // Delete işlemleri
+        StoreModel? Edit(int id);
+        List<StoreModel> GetAll();
+        StoreModel? Details(int id);
+
     }
 
     public class StoreService : IStoreService
     {
-        private readonly RepoBase<Store> _storeRepo;
+        private readonly IStoreRepository _storeRepo;
 
-        public StoreService(RepoBase<Store> storeRepo)
+        public StoreService(IStoreRepository storeRepo)
         {
             _storeRepo = storeRepo;
         }
@@ -25,8 +33,13 @@ namespace Business.Services
             // bir mağaza adı üzerinden hem sanal hem de sanal olmayan mağaza oluşturulabilmesini sağlayabilmek
             // ve bir mağazanın hem adı hem de sanal mı verisi üzerinden tek bir kaydının olabilmesi için
             // aşağıda Store Name ve IsVirtual üzerinden validasyon yapıyoruz
-            if (Query().Any(s => s.Name.ToLower() == model.Name.ToLower().Trim() && s.IsVirtual == model.IsVirtual))
+
+            var store = _storeRepo.Get(s => s.Name.ToLower() == model.Name.ToLower().Trim());
+
+            if(store is not null && store.IsVirtual == model.IsVirtual) 
+            {
                 return new ErrorResult("Store can't be added because store with the same name exists!");
+            }
 
             var entity = new Store()
             {
@@ -42,31 +55,28 @@ namespace Business.Services
             _storeRepo.Delete(s => s.Id == id);
             return new SuccessResult();
         }
-
-        public void Dispose()
+       
+        private StoreModel ToStoreModel(Store s)
         {
-            _storeRepo.Dispose();
-        }
-
-        public IQueryable<StoreModel> Query()
-        {
-            return _storeRepo.Query().OrderBy(s => s.IsVirtual).ThenBy(s => s.Name).Select(s => new StoreModel()
+            return new StoreModel()
             {
                 Guid = s.Guid,
                 Id = s.Id,
                 Name = s.Name,
                 IsVirtual = s.IsVirtual,
                 VirtualDisplay = s.IsVirtual ? "Yes" : "No"
-            });
+            };
         }
 
         public Result Update(StoreModel model)
         {
-            // bir mağaza adı üzerinden hem sanal hem de sanal olmayan mağaza oluşturulabilmesini sağlayabilmek
-            // ve bir mağazanın hem adı hem de sanal mı verisi üzerinden tek bir kaydının olabilmesi için
-            // aşağıda Store Name ve IsVirtual üzerinden validasyon yapıyoruz
-            if (Query().Any(s => s.Name.ToLower() == model.Name.ToLower().Trim() && s.IsVirtual == model.IsVirtual && s.Id != model.Id))
+            var store = _storeRepo.Get(s => s.Name.ToLower() == model.Name.ToLower().Trim());
+
+            if (store is not null && store.IsVirtual == model.IsVirtual && store.Id != model.Id)
+            {
                 return new ErrorResult("Store can't be updated because store with the same name exists!");
+
+            }
 
             var entity = new Store()
             {
@@ -76,6 +86,31 @@ namespace Business.Services
             };
             _storeRepo.Update(entity);
             return new SuccessResult();
+        }
+
+        public List<StoreModel> GetAll()
+        {
+            return _storeRepo.OrderBy(s => s.IsVirtual).ThenBy(s => s.Name).GetList().Select(ToStoreModel).ToList();
+        }
+
+        public StoreModel? Edit(int id)
+        {
+            var store = _storeRepo.Get(s => s.Id == id); 
+            if (store == null)
+            {
+                return null;
+            }
+            return ToStoreModel(store);
+        }
+
+        public StoreModel? Details(int id)
+        {
+            var store = _storeRepo.Get(s => s.Id == id);
+            if (store == null)
+            {
+                return null;
+            }
+            return ToStoreModel(store);
         }
     }
 }

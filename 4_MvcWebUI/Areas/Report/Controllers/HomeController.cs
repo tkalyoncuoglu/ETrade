@@ -49,7 +49,7 @@ namespace MvcWebUI.Areas.Report.Controllers
             // view'da kullanıcının seçtiği kategori arama yapıldıktan sonra seçili geliyorsa
             // 4. parametre olan selectedValue'yu her zaman göndermeye gerek yok
 
-            viewModel.Stores = new MultiSelectList(_storeService.Query().ToList(), "Id", "Name");
+            viewModel.Stores = new MultiSelectList(_storeService.GetAll(), "Id", "Name");
             // view'ın filtreleme kısmındaki mağazalar list box'ı için MultiSelectList oluşturduk
 
             return View(viewModel);

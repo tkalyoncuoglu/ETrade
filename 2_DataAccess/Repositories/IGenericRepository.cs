@@ -13,5 +13,6 @@ namespace DataAccess.Repositories
         void Delete(Expression<Func<T, bool>> predicate);
         GenericRepository<T> Include(List<string> includes);
         GenericRepository<T> OrderBy<TKey>(Expression<Func<T, TKey>> expression);
+        GenericRepository<T> ThenBy<TKey>(Expression<Func<T, TKey>> expression);
     }
 }

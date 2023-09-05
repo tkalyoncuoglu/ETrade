@@ -3,10 +3,11 @@ using AppCore.DataAccess.EntityFramework.Bases;
 using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
+using DataAccess.Repositories;
 
 namespace Business.Services
 {
-    public interface ICityService : IService<CityModel>
+    public interface ICityService 
 	{
 		List<CityModel> GetList(int countryId); // gönderilen ülke id parametresine göre şehirleri ülkelere göre filtreleyerek liste olarak dönen method tanımı
 		List<CityModel> GetList(); // tüm şehirleri liste olarak dönen method tanımı
@@ -15,57 +16,40 @@ namespace Business.Services
 
 	public class CityService : ICityService
 	{
-		private readonly RepoBase<City> _cityRepo;
+		private readonly ICityRepository _cityRepo;
 
-		public CityService(RepoBase<City> cityRepo)
+		public CityService(ICityRepository cityRepo)
 		{
 			_cityRepo = cityRepo;
 		}
-
-		public Result Add(CityModel model)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Result Delete(int id)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void Dispose()
-		{
-			_cityRepo.Dispose();
-		}
-
+		
 		public CityModel GetItem(int id)
 		{
-			return Query().SingleOrDefault(c => c.Id == id);
+			var city = _cityRepo.Get(c => c.Id == id);
+
+			return ToCityModel(city);
 		}
 
 		public List<CityModel> GetList(int countryId)
 		{
-			return Query().Where(c => c.CountryId == countryId).ToList();
+			return _cityRepo.OrderBy(x => x.Name).GetList(c => c.CountryId == countryId).Select(ToCityModel).ToList();
 		}
 
 		public List<CityModel> GetList()
 		{
-			return Query().ToList();
+			return _cityRepo.OrderBy(x => x.Name).GetList().Select(ToCityModel).ToList();
 		}
 
-		public IQueryable<CityModel> Query()
+		private CityModel ToCityModel(City c) 
 		{
-			return _cityRepo.Query().OrderBy(c => c.Name).Select(c => new CityModel()
+			return new CityModel()
 			{
 				CountryId = c.CountryId,
 				Name = c.Name,
 				Guid = c.Guid,
 				Id = c.Id
-			});
-		}
+			};
 
-		public Result Update(CityModel model)
-		{
-			throw new NotImplementedException();
-		}
+        }
 	}
 }
