@@ -27,7 +27,7 @@ namespace MvcWebUI.Controllers
         // Action veya Controller üzerinde Authorize attribute'u yazılmadığı için sisteme giriş yapan veya yapmayan herkes bu action'ı çağırabilir
         public IActionResult Index()
         {
-            List<CategoryModel> categoryList = _categoryService.GetAll(); // Add get list service logic here
+            List<CategoryModel> categoryList = _categoryService.GetList(); // Add get list service logic here
             return View(categoryList);
         }
 

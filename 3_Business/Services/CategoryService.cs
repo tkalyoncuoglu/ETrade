@@ -7,16 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
-    public interface ICategoryService  
-    {
-        Result Add(CategoryModel model); // Create işlemleri
-        Result Update(CategoryModel model); // Update işlemleri
-        Result Delete(int id); // Delete işlemleri
-        Task<List<CategoryModel>> GetListAsync();
-        List<CategoryModel> GetAll();
-        CategoryModel? Get(int id);
-    }
-
+   
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepo;
@@ -107,7 +98,7 @@ namespace Business.Services
             return categories.Select(ToCategoryModel).ToList();
         }
 
-        public List<CategoryModel> GetAll()
+        public List<CategoryModel> GetList()
         {
             var categories = _categoryRepo.OrderBy(x => x.Name).
                 Include(new List<string> { "Products" }).

@@ -8,7 +8,7 @@ namespace Business.Services
     public interface ICountryService 
 	{
 		List<CountryModel> GetList(); 
-		CountryModel GetItem(int id); // id parametresine göre ülkeyi dönen method tanımı
+		CountryModel Get(int id); // id parametresine göre ülkeyi dönen method tanımı
     }
 
     public class CountryService : ICountryService
@@ -26,7 +26,7 @@ namespace Business.Services
 			return _countryRepository.OrderBy(x => x.Name).GetList().Select(ToCountryModel).ToList();
 		}
 
-		public CountryModel GetItem(int id) 
+		public CountryModel Get(int id) 
 		{
 			var country = _countryRepository.Get(c => c.Id == id);
 

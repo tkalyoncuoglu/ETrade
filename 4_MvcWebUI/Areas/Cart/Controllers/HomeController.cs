@@ -49,7 +49,7 @@ namespace MvcWebUI.Areas.Cart.Controllers
             // claim'in value'suna (değer) ulaşıp int'e dönüştürerek userId değişkenine atıyoruz
             userId = Convert.ToInt32(User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Sid).Value);
 
-            var product = _productService.Details(productId); // ürünü servisten productId üzerinden çekiyoruz
+            var product = _productService.Get(productId); // ürünü servisten productId üzerinden çekiyoruz
 
             var cart = GetSession(userId); // ürünü eklemeden önce session'dan kullanıcı sepet eleman listesini alıyoruz
 

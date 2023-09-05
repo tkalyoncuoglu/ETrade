@@ -35,7 +35,7 @@ namespace MvcWebUI.Controllers
         public IActionResult Index() // tarayıcıda ~/Products/Index adresi girilerek veya herhangi bir view'da (örneğin Views -> Shared klasörü altındaki _Layout.cshtml)
                                      // bu adres için link oluşturularak çağrılabilir.
         {
-            List<ProductModel> products = _productService.Get(); // ToList LINQ (Language Integrated Query) methodu sorgunun çalıştırılmasını ve sonucunun IQueryable'da kullanılan tip
+            List<ProductModel> products = _productService.GetList(); // ToList LINQ (Language Integrated Query) methodu sorgunun çalıştırılmasını ve sonucunun IQueryable'da kullanılan tip
                                                                             // üzerinden bir liste olarak dönmesini sağlar.
 
             //return View("ProductList", products); // *1
@@ -50,7 +50,7 @@ namespace MvcWebUI.Controllers
         // Authorize attribute'u yazılmadığı için controller'ın üzerindeki Authorize geçerli olacaktır.
         public IActionResult Details(int id) 
         {
-            ProductModel? product = _productService.Details(id);
+            ProductModel? product = _productService.Get(id);
             if (product is null) 
             {
                 return View("_Error", "Product not found!"); 
@@ -69,7 +69,7 @@ namespace MvcWebUI.Controllers
                                       // bu adres için link oluşturularak çağrılabilir. Create view'ındaki form kullanıcıya dönülür ki kullanıcı veri girip sunucuya gönderebilsin.
                                       // Veritabanında yeni kayıt oluşturmak için kullanılır.
         {
-            ViewBag.Categories = new SelectList(_categoryService.GetAll(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_categoryService.GetList(), "Id", "Name");
             // Eğer view'da kullanılacak model'den farklı bir tipte veriye ihtiyaç varsa ViewBag veya ViewData üzerinden gerek action'dan view'a gerekse view'lar arası
             // model verisi dışındaki veriler taşınabilir.
             // ViewBag ile ViewData aynı yapı olarak birbirlerinin yerlerine kullanılabilir, sadece kullanımları farklıdır. Örneğin ViewData["Categories"] olarak da burada kullanabilirdik.
@@ -146,7 +146,7 @@ namespace MvcWebUI.Controllers
 				ModelState.AddModelError("", result.Message); // 2. daha iyi yöntem: view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
                                                               // gösterimini sağlayabiliriz
             }
-            ViewBag.Categories = new SelectList(_categoryService.GetAll(), "Id", "Name", product.CategoryId);
+            ViewBag.Categories = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Create view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
@@ -167,14 +167,14 @@ namespace MvcWebUI.Controllers
         public IActionResult Edit(int id) // örneğin tarayıcıda ~/Products/Edit/1 adresi girilerek veya herhangi bir view'da (örneğin Views -> Products -> Index.cshtml)
                                           // bu adres için id parametresini de gönderen bir link oluşturularak çağrılabilir.
         {
-            ProductModel? product = _productService.Edit(id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
+            ProductModel? product = _productService.Get(id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
 
             if (product is null) // eğer gelen id'ye göre ürün bulunamadıysa
             {
                 return View("_Error", "Product not found!"); // ürün bulunamadı mesajını daha önce oluşturduğumuz _Error.cshtml view'ına gönderiyoruz
             }
 
-            ViewBag.CategoryId = new SelectList(_categoryService.GetAll(), "Id", "Name", product.CategoryId);
+            ViewBag.CategoryId = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
             // view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini SelectList objesine doldurarak ViewBag'e atıyoruz,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden daha önce kaydetmiş olduğu kategorinin
             // CategoryId üzerinden seçilmesini sağlar
@@ -236,7 +236,7 @@ namespace MvcWebUI.Controllers
 				ModelState.AddModelError("", result.Message); // view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
 															  // gösterimini sağlayabiliriz
 			}
-			ViewBag.CategoryId = new SelectList(_categoryService.GetAll(), "Id", "Name", product.CategoryId);
+			ViewBag.CategoryId = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Edit view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
@@ -257,7 +257,7 @@ namespace MvcWebUI.Controllers
         public IActionResult Delete(int id) // örneğin tarayıcıda ~/Products/Delete/1 adresi girilerek veya herhangi bir view'da (örneğin Views -> Products -> Index.cshtml)
                                             // bu adres için id parametresini de gönderen bir link oluşturularak çağrılabilir.
         {
-            ProductModel? product = _productService.Details(id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
+            ProductModel? product = _productService.Get(id); // önce action'a gelen id parametresine göre ürün verisini çekiyoruz
 
             if (product is null) // eğer gelen id'ye göre ürün bulunamadıysa
             {
@@ -394,7 +394,7 @@ namespace MvcWebUI.Controllers
 
         public ActionResult GetProductsXmlContent() // tarayıcıda çağrılması: ~/Products/GetProductsXmlContent, XML döndürme işlemleri genelde bu şekilde yapılmaz, web servisler üzerinden döndürülür.
         {
-            List<ProductModel> products = _productService.Get();
+            List<ProductModel> products = _productService.GetList();
             string xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
             xml += "<Products>";
             foreach (ProductModel product in products)

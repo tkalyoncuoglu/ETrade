@@ -6,19 +6,7 @@ using DataAccess.Repositories;
 
 namespace Business.Services
 {
-    public interface IProductService   // IProductService ProductModel tipi üzerinden IService'i implemente eden ve methodlarında
-                                                              // ProductModel <-> Product dönüşümlerini yaparak Product tipindeki Repo üzerinden
-                                                              // CRUD işlemleri için oluşturulan bir interface'tir.
-    {
-        Result Add(ProductModel model); // Create işlemleri
-        Result Update(ProductModel model); // Update işlemleri
-        Result Delete(int id); // Delete işlemleri
-        Result DeleteImage(int id); // entity Image ve ImageExtension özelliklerini null olarak güncelleyerek ürün imajını siler
-        public List<ProductModel> Get();
-        public ProductModel? Edit(int id);
-        public ProductModel? Details(int id);
-    }
-
+   
     public class ProductService : IProductService // ProductService IProductService'i implemente eden ve MVC projesindeki Program.cs IoC Container'ında
                                                   // bağımlılığı IProductService ile yönetilecek ve bu sayede ilgili controller'lara constructor üzerinden
                                                   // new'lenerek enjekte edilerek kullanılacak concrete (somut) bir class'tır.
@@ -35,7 +23,7 @@ namespace Business.Services
         }
 
 
-        public List<ProductModel> Get() 
+        public List<ProductModel> GetList() 
         {
 			var products = _productRepository.
                 OrderBy(product => product.Name).
@@ -141,19 +129,7 @@ namespace Business.Services
             return new SuccessResult("Product image deleted successfully."); // başarılı işlem sonucunu döndük
 		}
 
-        public ProductModel? Edit(int id)
-        {
-            var product = _productRepository.Include(new List<string> { "Category", "ProductStores.Store" }).Get(x => x.Id == id);
-
-            if(product is null)
-            {
-                return null;
-            }
-
-            return ToProductModel(product);
-        }
-
-        public ProductModel? Details(int id)
+        public ProductModel? Get(int id)
         {
             Product? product = _productRepository.Include(new List<string> { "Category", "ProductStores.Store" }).Get(p => p.Id == id);
 

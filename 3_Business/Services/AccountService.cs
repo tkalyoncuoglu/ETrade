@@ -6,17 +6,7 @@ using DataAccess.Enums;
 
 namespace Business.Services
 {
-    public interface IAccountService // IAccountService'i IService'ten implemente etmiyoruz çünkü bu servis UserService enjeksiyonu üzerinden login ve register işlerini yapacak,
-									 // CRUD işlemlerinin hepsini yapmayacak, bu yüzden Login ve Register methodlarını içerisinde tanımlıyoruz
-	{
-		Result Login(AccountLoginModel accountLoginModel, UserModel userResultModel); // kullanıcıların kullanıcı girişi için
-		// accountLoginModel view üzerinden kullanıcıdan aldığımız verilerdir,
-		// userResultModel ise accountLoginModel'deki doğru verilere göre kullanıcıyı veritabanından çektikten sonra method içerisinde atayacağımız ve
-		// referans tip olduğu için de Login methodunu çağırdığımız yerde kullanabileceğimiz sonuç kullanıcı objesidir,
-		// böylelikle Login methodundan hem login işlem sonucunu Result olarak hem de işlem başarılıysa kullanıcı objesini UserModel objesi olarak dönebiliyoruz
-
-		Result Register(AccountRegisterModel accountRegisterModel); // kullanıcıların yeni kullanıcı kaydı için
-	}
+    
 
 	public class AccountService : IAccountService
 	{

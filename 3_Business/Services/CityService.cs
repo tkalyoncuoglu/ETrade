@@ -5,13 +5,6 @@ using DataAccess.Repositories;
 
 namespace Business.Services
 {
-    public interface ICityService 
-	{
-		List<CityModel> GetList(int countryId); // gönderilen ülke id parametresine göre şehirleri ülkelere göre filtreleyerek liste olarak dönen method tanımı
-		List<CityModel> GetList(); // tüm şehirleri liste olarak dönen method tanımı
-		CityModel GetItem(int id); // id üzerinden şehri dönen method tanımı
-	}
-
 	public class CityService : ICityService
 	{
 		private readonly ICityRepository _cityRepo;
@@ -21,7 +14,7 @@ namespace Business.Services
 			_cityRepo = cityRepo;
 		}
 		
-		public CityModel GetItem(int id)
+		public CityModel Get(int id)
 		{
 			var city = _cityRepo.Get(c => c.Id == id);
 
