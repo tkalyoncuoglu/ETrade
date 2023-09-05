@@ -1,13 +1,14 @@
 #nullable disable
-
-using Business.Services;
+using Business.Services.Abstract;
 using DataAccess.Contexts;
-using DataAccess.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using MvcWebUI.Settings;
-using Services;
+using Repositories.Abstract;
+using Repositories.Concrete;
+using Services.Abstract;
+using Services.Concrete;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);

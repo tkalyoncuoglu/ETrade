@@ -1,9 +1,10 @@
-﻿using Business.Services;
+﻿using Business.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MvcWebUI.Areas.Report.Models;
-using Services;
+using Services.Abstract;
+
 
 namespace MvcWebUI.Areas.Report.Controllers
 {

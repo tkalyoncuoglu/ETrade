@@ -1,9 +1,9 @@
-﻿using Business.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Services.Abstract;
 
 namespace MvcWebUI.Controllers
 {
-	[Route("[controller]")] // bu route tanımı bu controller'a controller adı üzerinden ~/Cities olarak ulaşmamızı sağlar
+    [Route("[controller]")] // bu route tanımı bu controller'a controller adı üzerinden ~/Cities olarak ulaşmamızı sağlar
     public class CitiesController : Controller
 	{
 		private readonly ICityService _cityService;
@@ -26,11 +26,7 @@ namespace MvcWebUI.Controllers
 			if (!countryId.HasValue)
 				return NotFound();
 			var cities = _cityService.GetList(countryId.Value);
-			return Json(cities); // IActionResult interface'ini implemente eden ActionResult class'ınden miras alan JsonResult objesi
-								 // dönmemizi sağlayan method, şehir listesi JSON (Javascript Object Notification) veri formatında dönülecek,
-								 // bunun sonucunu tarayıcının adresi üzerinden örneğin ~/Cities/GetCities/1 çağırarak görebiliriz ancak
-								 // en sonda yazdığımız countryId (1) parametresinin veritabanında Countries tablosunda mevcut
-								 // bir Id değeri olmasına dikkat etmeliyiz
+			return Ok(cities); 
 		}
 	}
 }

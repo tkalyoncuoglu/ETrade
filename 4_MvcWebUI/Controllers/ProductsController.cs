@@ -1,11 +1,11 @@
 ﻿using AppCore.Results;
 using Business.Models;
-using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MvcWebUI.Settings;
 using Results;
+using Services.Abstract;
 
 namespace MvcWebUI.Controllers
 {
@@ -16,15 +16,9 @@ namespace MvcWebUI.Controllers
     {
         private readonly IProductService _productService; // controller'da ürünle ilgili işleri gerçekleştirebilmek için servis alanı tanımlanır ve constructor üzerinden enjekte edilir.
 
-        private readonly ICategoryService _categoryService; // controller'da kategori ile ilgili işleri gerçekleştirebilmek için servis alanı tanımlanır ve constructor üzerinden enjekte edilir.
-        
-        private readonly IStoreService _storeService; // controller'da mağaza ile ilgili işleri gerçekleştirebilmek için servis alanı tanımlanır ve constructor üzerinden enjekte edilir.
-
-        public ProductsController(IProductService productService, ICategoryService categoryService, IStoreService storeService)
+        public ProductsController(IProductService productService)
         {
             _productService = productService;
-            _categoryService = categoryService;
-            _storeService = storeService;
         }
 
 
@@ -69,7 +63,7 @@ namespace MvcWebUI.Controllers
                                       // bu adres için link oluşturularak çağrılabilir. Create view'ındaki form kullanıcıya dönülür ki kullanıcı veri girip sunucuya gönderebilsin.
                                       // Veritabanında yeni kayıt oluşturmak için kullanılır.
         {
-            ViewBag.Categories = new SelectList(_categoryService.GetList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_productService.GetCategories(), "Id", "Name");
             // Eğer view'da kullanılacak model'den farklı bir tipte veriye ihtiyaç varsa ViewBag veya ViewData üzerinden gerek action'dan view'a gerekse view'lar arası
             // model verisi dışındaki veriler taşınabilir.
             // ViewBag ile ViewData aynı yapı olarak birbirlerinin yerlerine kullanılabilir, sadece kullanımları farklıdır. Örneğin ViewData["Categories"] olarak da burada kullanabilirdik.
@@ -77,7 +71,7 @@ namespace MvcWebUI.Controllers
             // kategori listemizi, listenin tipi (CategoryModel) üzerinden arka planda tutacağımız (yani kullanıcının görmeyeceği) özellik ismini (Id) ve
             // listenin tipi (CategoryModel) üzerinden kullanıcıya göstereceğimiz özellik ismini (Name) belirtiyoruz.
 
-            ViewBag.Stores = new MultiSelectList(_storeService.GetList(), "Id", "Name");
+            ViewBag.Stores = new MultiSelectList(_productService.GetStores(), "Id", "Name");
             // Tıpkı yukarıda kategori listesini bir drop down list üzerinden kullanıcıya gösterebilmek için bir SelectList oluşturduğumuz ve ViewBag'e attığımız gibi
             // mağazaları da ilgili servisi üzerinden çekip bir MultiSelectList'e doldurup ViewBag'e atıyoruz ki view'da kullanıcı List Box (multiple attribute'lu HTML select tag'i)
             // üzerinden hiç, bir veya daha çok mağaza seçebilsin.
@@ -146,12 +140,12 @@ namespace MvcWebUI.Controllers
 				ModelState.AddModelError("", result.Message); // 2. daha iyi yöntem: view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
                                                               // gösterimini sağlayabiliriz
             }
-            ViewBag.Categories = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
+            ViewBag.Categories = new SelectList(_productService.GetCategories(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Create view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.Stores = new MultiSelectList(_storeService.GetList(), "Id", "Name", product.StoreIds);
+            ViewBag.Stores = new MultiSelectList(_productService.GetStores(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 
@@ -174,12 +168,12 @@ namespace MvcWebUI.Controllers
                 return View("_Error", "Product not found!"); // ürün bulunamadı mesajını daha önce oluşturduğumuz _Error.cshtml view'ına gönderiyoruz
             }
 
-            ViewBag.CategoryId = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
+            ViewBag.CategoryId = new SelectList(_productService.GetCategories(), "Id", "Name", product.CategoryId);
             // view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini SelectList objesine doldurarak ViewBag'e atıyoruz,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden daha önce kaydetmiş olduğu kategorinin
             // CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.StoreIds = new MultiSelectList(_storeService.GetList(), "Id", "Name", product.StoreIds);
+            ViewBag.StoreIds = new MultiSelectList(_productService.GetStores(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 
@@ -236,12 +230,12 @@ namespace MvcWebUI.Controllers
 				ModelState.AddModelError("", result.Message); // view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
 															  // gösterimini sağlayabiliriz
 			}
-			ViewBag.CategoryId = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
+			ViewBag.CategoryId = new SelectList(_productService.GetCategories(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Edit view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.StoreIds = new MultiSelectList(_storeService.GetList(), "Id", "Name", product.StoreIds);
+            ViewBag.StoreIds = new MultiSelectList(_productService.GetStores(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 

@@ -1,8 +1,8 @@
 ﻿using Business.Models;
-using Business.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.EntityFrameworkCore;
+using Services.Abstract;
 
 namespace MvcWebUI.ViewComponents
 {
