@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Business.Models
 {
-    public class ProductModel : RecordBase // modeller de RecordBase'den miras almalıdır ki hem Id ve Guid alanlarını
+    public class ProductModel : EntityBase // modeller de RecordBase'den miras almalıdır ki hem Id ve Guid alanlarını
                                            // miras alsın hem de servislerde tip olarak kullanılabilsin.
     {
         // ilgili entity'de referans olmayan özellikler veya başka bir deyişle veritabanındaki ilgili tablosundaki

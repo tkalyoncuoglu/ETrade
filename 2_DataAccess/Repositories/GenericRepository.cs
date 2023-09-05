@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : RecordBase, new()
+    public class GenericRepository<T> : IGenericRepository<T> where T : EntityBase, new()
     {
         protected ETradeContext _context;
 

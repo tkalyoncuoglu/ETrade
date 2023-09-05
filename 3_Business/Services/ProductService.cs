@@ -1,12 +1,12 @@
 ﻿using AppCore.Results;
-using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
 using DataAccess.Repositories;
+using Results;
 
 namespace Business.Services
 {
-   
+
     public class ProductService : IProductService // ProductService IProductService'i implemente eden ve MVC projesindeki Program.cs IoC Container'ında
                                                   // bağımlılığı IProductService ile yönetilecek ve bu sayede ilgili controller'lara constructor üzerinden
                                                   // new'lenerek enjekte edilerek kullanılacak concrete (somut) bir class'tır.

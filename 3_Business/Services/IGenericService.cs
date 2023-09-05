@@ -1,5 +1,5 @@
-﻿using AppCore.Results.Bases;
-using Business.Models;
+﻿using Business.Models;
+using Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,13 +1,13 @@
 ﻿using AppCore.Results;
-using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
 using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Results;
 
 namespace Business.Services
 {
-   
+
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepo;

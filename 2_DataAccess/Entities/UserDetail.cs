@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Entities
 {
-	public class UserDetail : RecordBase
+	public class UserDetail : EntityBase
 	{
 		public int UserId { get; set; }
 		public Sex Sex { get; set; }

@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Business.Models
 {
-	public class RoleModel : RecordBase
+	public class RoleModel : EntityBase
 	{
 		#region Entity'den Kopyalanan Özellikler
 		[DisplayName("Role")]

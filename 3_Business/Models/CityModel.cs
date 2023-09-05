@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Models
 {
-	public class CityModel : RecordBase
+	public class CityModel : EntityBase
 	{
 		#region Entity'den Kopyalanan Özellikler
 		[Required(ErrorMessage = "{0} is required!")]

@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace DataAccess.Repositories
 {
-    public interface IGenericRepository<T> where T : RecordBase, new()
+    public interface IGenericRepository<T> where T : EntityBase, new()
     {
         T? Get(Expression<Func<T, bool>> expression);
         List<T> GetList(Expression<Func<T, bool>> expression);

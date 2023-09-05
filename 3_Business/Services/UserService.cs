@@ -1,8 +1,8 @@
 ﻿using AppCore.Results;
-using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
 using DataAccess.Repositories;
+using Results;
 using System.Linq.Expressions;
 
 namespace Business.Services

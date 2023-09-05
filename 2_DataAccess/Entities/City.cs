@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Entities
 {
-	public class City : RecordBase
+	public class City : EntityBase
 	{
 		[Required]
 		[StringLength(150)]

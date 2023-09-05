@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Entities
 {
-    public class Category : RecordBase // Kategori
+    public class Category : EntityBase // Kategori
     {
         [Required]
         [StringLength(100)]

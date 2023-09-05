@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DataAccess.Entities
 {
     //[Table("ETradeProducts")] // Product entity'sinin karşılığında kullanılacak tablo ismini değiştirmek için kullanılabilir, ETradeContext OnModelCreating methodunda yazmak daha uygundur
-    public class Product : RecordBase // Ürün
+    public class Product : EntityBase // Ürün
     {
         // SOLID prensipleri gereği özellikler üzerinden data annotation'larla tablo sütun özelliklerini belirlemek yerine
         // proje DbContext class'ında (ETradeContext) OnModelCreating methodunu ezerek bu method içerisinde 

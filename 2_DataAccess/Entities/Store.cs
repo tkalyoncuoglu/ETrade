@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Entities
 {
-    public class Store : RecordBase // Mağaza
+    public class Store : EntityBase // Mağaza
     {
         [Required]
         [StringLength(150)]

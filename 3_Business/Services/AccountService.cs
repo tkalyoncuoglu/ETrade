@@ -1,14 +1,14 @@
 ﻿using AppCore.Results;
-using AppCore.Results.Bases;
 using Business.Models;
 using Business.Models.Account;
 using DataAccess.Enums;
+using Results;
 
 namespace Business.Services
 {
-    
 
-	public class AccountService : IAccountService
+
+    public class AccountService : IAccountService
 	{
 		private readonly IUserService _userService; // CRUD işlemlerini yaptığımız UserService objesini bu servise enjekte ediyoruz ki Query methodu üzerinden Login,
 													// Add methodu üzerinden de Register işlemleri yapabilelim

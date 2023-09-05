@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace Business.Models
 {
-    public class StoreModel : RecordBase
+    public class StoreModel : EntityBase
     {
         #region Entity'den Kopyalanan Özellikler
         [Required(ErrorMessage = "{0} is required!")]

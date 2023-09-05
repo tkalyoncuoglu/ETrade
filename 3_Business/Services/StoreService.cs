@@ -1,12 +1,12 @@
 ﻿using AppCore.Results;
-using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
 using DataAccess.Repositories;
+using Results;
 
 namespace Business.Services
 {
-   
+
 
     public class StoreService : IStoreService
     {

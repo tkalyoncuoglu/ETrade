@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Entities
 {
-	public class User : RecordBase // Kullanıcı
+	public class User : EntityBase // Kullanıcı
 	{
 		[Required]
 		[StringLength(15)]

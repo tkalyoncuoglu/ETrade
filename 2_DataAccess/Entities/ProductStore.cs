@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Entities
 {
-    public class ProductStore : RecordBase
+    public class ProductStore : EntityBase
     {
         public int ProductId { get; set; } // Ürün entity'sinden ürün id'yi taşıyoruz ve mağaza id ile birlikte primary key olarak ilk sırada set ediyoruz
 
