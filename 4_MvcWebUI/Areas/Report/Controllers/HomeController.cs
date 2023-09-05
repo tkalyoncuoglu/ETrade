@@ -1,9 +1,9 @@
 ﻿using Business.Services;
-using Business.Services.Report;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MvcWebUI.Areas.Report.Models;
+using Services;
 
 namespace MvcWebUI.Areas.Report.Controllers
 {
@@ -44,7 +44,7 @@ namespace MvcWebUI.Areas.Report.Controllers
                                                                                 // AppCore -> DataAccess -> Business -> MvcWebUI
                                                                                 // yönünde olmalıdır.
 
-            viewModel.Categories = new SelectList(_categoryService.Query().ToList(), "Id", "Name");
+            viewModel.Categories = new SelectList(_categoryService.GetAll(), "Id", "Name");
             // view'ın filtreleme kısmında kategori drop down list'i için oluşturuyoruz,
             // view'da kullanıcının seçtiği kategori arama yapıldıktan sonra seçili geliyorsa
             // 4. parametre olan selectedValue'yu her zaman göndermeye gerek yok

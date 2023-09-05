@@ -1,14 +1,13 @@
 #nullable disable
 
-using AppCore.DataAccess.EntityFramework.Bases;
 using Business.Services;
-using Business.Services.Report;
 using DataAccess.Contexts;
 using DataAccess.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using MvcWebUI.Settings;
+using Services;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -87,8 +86,6 @@ builder.Services.AddDbContext<ETradeContext>(); // projede herhangi bir class'ta
                                                                                                  // constructor injection yapýldýðýnda ETradeContext objesini new'leyerek
                                                                                                  // o class'a enjekte eder.       
 
-builder.Services.AddScoped(typeof(RepoBase<>), typeof(Repo<>)); // projede herhangi bir class'ta entity tipindeki RepoBase tipinde constructor injection yapýldýðýnda
-                                                                // entity tipindeki Repo objesini new'leyerek o class'a enjekte eder.
 
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -96,6 +93,9 @@ builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IProductStoreRepository, ProductStoreRepository>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductService, ProductService>(); // projede herhangi bir class'ta IProductService tipinde constructor injection yapýldýðýnda
                                                                // ProductService objesini new'leyerek o class'a enjekte eder.
 

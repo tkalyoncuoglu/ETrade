@@ -27,7 +27,7 @@ namespace MvcWebUI.Controllers
         // Action veya Controller üzerinde Authorize attribute'u yazılmadığı için sisteme giriş yapan veya yapmayan herkes bu action'ı çağırabilir
         public IActionResult Index()
         {
-            List<CategoryModel> categoryList = _categoryService.Query().ToList(); // Add get list service logic here
+            List<CategoryModel> categoryList = _categoryService.GetAll(); // Add get list service logic here
             return View(categoryList);
         }
 
@@ -39,7 +39,7 @@ namespace MvcWebUI.Controllers
                     // rol verisi atandıysa örneğin biz Admin veya User atadık Authorize ile birlikte bu rol verisi veya verileri kullanılmalıdır (Admin,User)
         public IActionResult Details(int id)
         {
-            CategoryModel category = _categoryService.Query().SingleOrDefault(c => c.Id == id); // Add get item service logic here
+            CategoryModel category = _categoryService.Get(id); // Add get item service logic here
             if (category == null)
             {
                 return View("_Error", "Category not found!");
@@ -86,7 +86,7 @@ namespace MvcWebUI.Controllers
                                      // ve Admin rolundekiler bu action'ı çağırabilir
         public IActionResult Edit(int id)
         {
-            CategoryModel category = _categoryService.Query().SingleOrDefault(c => c.Id == id); // Add get item service logic here
+            CategoryModel category = _categoryService.Get(id); // Add get item service logic here
             if (category == null)
             {
                 return View("_Error", "Category not found!");
@@ -127,7 +127,7 @@ namespace MvcWebUI.Controllers
                                          // eğer kullanıcı sisteme giriş yapmadıysa veya Admin rolunde değilse
                 return View("_Error", "You are not authorized for this operation!"); // kullanıcıya bu işlem için yetkisi olmadığı bilgisini göster
 
-            CategoryModel category = _categoryService.Query().SingleOrDefault(c => c.Id == id); // Add get item service logic here
+            CategoryModel category = _categoryService.Get(id); // Add get item service logic here
             if (category == null)
             {
                 return View("_Error", "Category not found!");

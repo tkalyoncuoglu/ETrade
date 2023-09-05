@@ -69,7 +69,7 @@ namespace MvcWebUI.Controllers
                                       // bu adres için link oluşturularak çağrılabilir. Create view'ındaki form kullanıcıya dönülür ki kullanıcı veri girip sunucuya gönderebilsin.
                                       // Veritabanında yeni kayıt oluşturmak için kullanılır.
         {
-            ViewBag.Categories = new SelectList(_categoryService.Query().ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_categoryService.GetAll(), "Id", "Name");
             // Eğer view'da kullanılacak model'den farklı bir tipte veriye ihtiyaç varsa ViewBag veya ViewData üzerinden gerek action'dan view'a gerekse view'lar arası
             // model verisi dışındaki veriler taşınabilir.
             // ViewBag ile ViewData aynı yapı olarak birbirlerinin yerlerine kullanılabilir, sadece kullanımları farklıdır. Örneğin ViewData["Categories"] olarak da burada kullanabilirdik.
@@ -146,7 +146,7 @@ namespace MvcWebUI.Controllers
 				ModelState.AddModelError("", result.Message); // 2. daha iyi yöntem: view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
                                                               // gösterimini sağlayabiliriz
             }
-            ViewBag.Categories = new SelectList(_categoryService.Query().ToList(), "Id", "Name", product.CategoryId);
+            ViewBag.Categories = new SelectList(_categoryService.GetAll(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Create view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
@@ -174,7 +174,7 @@ namespace MvcWebUI.Controllers
                 return View("_Error", "Product not found!"); // ürün bulunamadı mesajını daha önce oluşturduğumuz _Error.cshtml view'ına gönderiyoruz
             }
 
-            ViewBag.CategoryId = new SelectList(_categoryService.Query().ToList(), "Id", "Name", product.CategoryId);
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAll(), "Id", "Name", product.CategoryId);
             // view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini SelectList objesine doldurarak ViewBag'e atıyoruz,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden daha önce kaydetmiş olduğu kategorinin
             // CategoryId üzerinden seçilmesini sağlar
@@ -236,7 +236,7 @@ namespace MvcWebUI.Controllers
 				ModelState.AddModelError("", result.Message); // view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
 															  // gösterimini sağlayabiliriz
 			}
-			ViewBag.CategoryId = new SelectList(_categoryService.Query().ToList(), "Id", "Name", product.CategoryId);
+			ViewBag.CategoryId = new SelectList(_categoryService.GetAll(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Edit view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar

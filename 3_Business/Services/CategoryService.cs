@@ -1,27 +1,31 @@
-﻿using AppCore.Business.Services.Bases;
-using AppCore.DataAccess.EntityFramework.Bases;
-using AppCore.Results;
+﻿using AppCore.Results;
 using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
-    public interface ICategoryService : IService<CategoryModel>
+    public interface ICategoryService  
     {
+        Result Add(CategoryModel model); // Create işlemleri
+        Result Update(CategoryModel model); // Update işlemleri
+        Result Delete(int id); // Delete işlemleri
         Task<List<CategoryModel>> GetListAsync();
+        List<CategoryModel> GetAll();
+        CategoryModel? Get(int id);
     }
 
     public class CategoryService : ICategoryService
     {
-        private readonly RepoBase<Category> _categoryRepo;
+        private readonly ICategoryRepository _categoryRepo;
 
-        public CategoryService(RepoBase<Category> categoryRepo)
+        public CategoryService(ICategoryRepository categoryRepo)
         {
             _categoryRepo = categoryRepo;
         }
-
+        /*
         public IQueryable<CategoryModel> Query()
         {
             // Query methodu ile sorguyu oluşturup OrderBy LINQ methodu ile kategori adlarına göre artan sıralıyoruz (azalan sıra için OrderByDescending kullanılır).
@@ -34,10 +38,23 @@ namespace Business.Services
                 ProductsCount = c.Products.Count
             });
         }
+        */
+        private CategoryModel ToCategoryModel(Category c) 
+        {
+            return new CategoryModel()
+            {
+                Description = c.Description,
+                Guid = c.Guid,
+                Id = c.Id,
+                Name = c.Name,
+                ProductsCount = c.Products.Count
+            };
+        }
 
         public Result Add(CategoryModel model)
         {
-            if (_categoryRepo.Query().Any(c => c.Name.ToLower() == model.Name.ToLower().Trim())) // eğer bu ada sahip kategori varsa
+            var category = _categoryRepo.Get(c => c.Name.ToLower() == model.Name.ToLower().Trim());
+            if (category is not null) 
                 return new ErrorResult("Category can't be added because category with the same name exists!");
             var entity = new Category()
             {
@@ -50,7 +67,9 @@ namespace Business.Services
 
         public Result Update(CategoryModel model)
         {
-            if (_categoryRepo.Query().Any(c => c.Name.ToLower() == model.Name.ToLower().Trim() && c.Id != model.Id)) // eğer düzenlediğimiz kategori dışında (Id koşulu üzerinden) bu ada sahip kategori varsa
+            var category = _categoryRepo.Get(c => c.Name.ToLower() == model.Name.ToLower().Trim() && c.Id != model.Id);
+
+            if (category is not null) 
                 return new ErrorResult("Category can't be updated because category with the same name exists!");
             var entity = new Category()
             {
@@ -64,8 +83,8 @@ namespace Business.Services
 
         public Result Delete(int id)
         {
-            var category = Query().SingleOrDefault(c => c.Id == id); // yukarıda daha önce oluşturduğumuz Query methodu üzerinden id ile kategoriyi çekiyoruz
-            if (category.ProductsCount > 0) // eğer çektiğimiz kategorinin ürünleri varsa veritabanındaki ürün ve kategori tabloları arasındaki ilişki Entity Framework
+            var category = _categoryRepo.Include(new List<string> { "Products"}).Get(c => c.Id == id); // yukarıda daha önce oluşturduğumuz Query methodu üzerinden id ile kategoriyi çekiyoruz
+            if (category.Products.Count > 0) // eğer çektiğimiz kategorinin ürünleri varsa veritabanındaki ürün ve kategori tabloları arasındaki ilişki Entity Framework
                                             // code first yaklaşımında otomatik cascade olarak oluşturulduğundan silinen kategorinin tüm ürünleri silinecektir,
                                             // bunu engellemek için yukarıdaki Query methodunda Products'ı da sorguya dahil etmiş ve bunun sonucunda
                                             // her bir kategori için bir ProductsCount ataması yapmıştık, dolayısıyla bu özellik üzerinden kontrol ederek
@@ -75,31 +94,42 @@ namespace Business.Services
             return new SuccessResult("Category deleted successfully.");
         }
 
-        public void Dispose()
-        {
-            _categoryRepo.Dispose();
-        }
-
-
-
+        
         public async Task<List<CategoryModel>> GetListAsync() // bu method tanımı mutlaka ICategoryService içerisinde de yapılmalıdır ki
                                                               // controller'da çağrılabilsin.
         {
-            List<CategoryModel> categories;
-
-            // 1. yöntem: 
-            //Task<List<CategoryModel>> task;
-            //task = Query().ToListAsync(); // önce Async (asenkron) method bir göreve (task) atanır.
-            //categories = task.Result; // daha sonra görev Result ile tamamlanıp içerisindeki kategori listesine ulaşılır.
-
-            // 2. yöntem:
-            categories = await Query().ToListAsync(); //await: asynchronous wait yani asenkron bekleme anlamına gelir.
+            var categories = await _categoryRepo.OrderBy(x => x.Name).GetListAsync(); //await: asynchronous wait yani asenkron bekleme anlamına gelir.
                                                       // await ile Async method sonucunda ulaşılan task tamamlanıp
                                                       // içerisindeki veriye (List<CategoryModel> tipinde) ulaşılır.
                                                       // eğer bir methodda Async bir method await ile kullanılıyorsa methodun
                                                       // dönüş tipinin başına async yazılmalı ve dönüş tipi de bir Task<> içerisine alınmalıdır.
 
+            return categories.Select(ToCategoryModel).ToList();
+        }
+
+        public List<CategoryModel> GetAll()
+        {
+            var categories = _categoryRepo.OrderBy(x => x.Name).
+                Include(new List<string> { "Products" }).
+                GetList().
+                Select(ToCategoryModel).ToList();
             return categories;
         }
+
+        public CategoryModel? Get(int id)
+        {
+            var category = _categoryRepo.Include(new List<string> { "Products" }).Get(x => x.Id == id);
+
+            if(category is null)
+            {
+                return null;
+            }
+
+            return ToCategoryModel(category);
+        }
+
+        
+
+
     }
 }

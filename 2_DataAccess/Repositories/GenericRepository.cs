@@ -16,6 +16,8 @@ namespace DataAccess.Repositories
 
         protected IQueryable<T> _query;
 
+        public IQueryable<T> Queryable => _query;
+
         public GenericRepository(ETradeContext context)
         {
             _context = context;
@@ -86,6 +88,23 @@ namespace DataAccess.Repositories
                 _query = q.ThenBy(expression);
             }
             return this;
+        }
+
+        public GenericRepository<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> expression)
+        {
+            _query = _query.OrderByDescending(expression);
+
+            return this;
+        }
+
+        public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _query.Where(expression).ToListAsync();
+        }
+
+        public async Task<List<T>> GetListAsync()
+        {
+            return await _query.ToListAsync();
         }
     }
 }

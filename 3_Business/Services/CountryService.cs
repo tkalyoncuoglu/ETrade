@@ -1,6 +1,4 @@
-﻿using AppCore.Business.Services.Bases;
-using AppCore.DataAccess.EntityFramework.Bases;
-using AppCore.Results.Bases;
+﻿using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
 using DataAccess.Repositories;

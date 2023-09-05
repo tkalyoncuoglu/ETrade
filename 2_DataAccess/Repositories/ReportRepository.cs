@@ -1,47 +1,40 @@
-﻿using AppCore.DataAccess.EntityFramework.Bases;
-using Business.Models.Report;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Business.Services.Report
+namespace DataAccess.Repositories
 {
-    public interface IReportService // bu interface'in IService'i implemente etmesine gerek yoktur çünkü bu servis CRUD işlemleri yapmayacak.
+    public class ReportRepository : IReportRepository
     {
-        // ReportService class'ındaki method tanımları
-        List<ReportItemModel> GetList(ReportFilterModel filter, bool useInnerJoin = false);
-    }
+        private readonly ICategoryRepository _categoryRepository;
 
-    public class ReportService : IReportService
-    {
-        private readonly RepoBase<Product> _repo;
+        private readonly IProductRepository _productRepository;
 
-        public ReportService(RepoBase<Product> repo)
+        private readonly IStoreRepository _storeRepository;
+
+        private readonly IProductStoreRepository _productStoreRepository;
+
+        public ReportRepository(ICategoryRepository categoryRepository, IProductRepository productRepository, IStoreRepository storeRepository, IProductStoreRepository productStoreRepository)
         {
-            _repo = repo;
+            _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
+            _storeRepository = storeRepository;
+            _productStoreRepository = productStoreRepository;
         }
 
-        /* SQL sorgusu örnek:
-        select p.Name [Product Name], p.Description [Product Description], FORMAT(p.UnitPrice, 'C2') [Unit Price],
-        CAST(p.StockAmount as varchar) + ' units' [Stock Amount], CONVERT(varchar(10), p.ExpirationDate, 101) [Expiration Date],
-        c.Name Category, c.Description [Category Description], s.Name + case when s.IsVirtual = 1 then ' (Virtual)' else ' (Real)' end as Store
-        from Products p inner join Categories c
-        on p.CategoryId = c.Id
-        inner join ProductStores ps
-        on ps.ProductId = p.Id
-        inner join Stores s
-        on ps.StoreId = s.Id
-        --where p.UnitPrice < 3000 and c.Id = 1 and s.Id = 2 -- category id ve store id uygulama üzerinden Seed işlemi yapıldıktan sonra değişebilir
-        --order by s.Name, c.Name, p.Name
-        */
-        public List<ReportItemModel> GetList(ReportFilterModel filter, bool useInnerJoin = false) 
+        public List<ReportItem> GetList(ReportFilter filter, bool useInnerJoin = false)
         {
             #region Sorgu oluşturma
-            var productQuery = _repo.Query(); // Products sorgusu
-            var categoryQuery = _repo.Query<Category>(); // Categories sorgusu,
+            var productQuery = _productRepository.Queryable; // Products sorgusu
+            var categoryQuery = _categoryRepository.Queryable; // Categories sorgusu,
                                                          // RepoBase'deki Query methodunu Product tipi dışında başka bir tip (örneğin burada Category) tanımlayarak çağırabiliriz.
-            var storeQuery = _repo.Query<Store>(); // Stores sorgusu
-            var productStoreQuery = _repo.Query<ProductStore>(); // ProductStores sorgusu
+            var storeQuery = _storeRepository.Queryable; // Stores sorgusu
+            var productStoreQuery = _productStoreRepository.Queryable; // ProductStores sorgusu
 
-            IQueryable<ReportItemModel> query;
+            IQueryable<ReportItem> query;
 
             if (useInnerJoin) // SQL Inner Join iki tablo arasında sadece primary key ve foreign key id'leri üzerinden eşleşenleri getirir. 
             {
@@ -56,7 +49,7 @@ namespace Business.Services.Report
                         //where product.UnitPrice < 3000 && category.Id == 1 && store.Id == 2 // eğer istenirse sorguya where koşulu eklenebilir
                         //orderby store.Name, category.Name, product.Name // eğer istenirse sorguya order by eklenebilir
 
-                        select new ReportItemModel() // entity delegeleri ile çektiğimiz veri üzerinden modeli oluşturuyoruz
+                        select new ReportItem() // entity delegeleri ile çektiğimiz veri üzerinden modeli oluşturuyoruz
                         {
                             CategoryDescription = category.Description,
                             CategoryName = category.Name,
@@ -92,7 +85,7 @@ namespace Business.Services.Report
                         join s in storeQuery // s: Store tipindeki delege
                         on productStore.StoreId equals s.Id into storeJoin // ps değil, son delegemiz productStore -> StoreId ile s -> Id eşleştiriyoruz ve storeJoin delegesine atıyoruz
                         from store in storeJoin.DefaultIfEmpty() // storeJoin üzerinden sorguda kullanacağımız store ile devam ediyoruz
-                        select new ReportItemModel() // entity delegeleri ile çektiğimiz veri üzerinden modeli oluşturuyoruz
+                        select new ReportItem() // entity delegeleri ile çektiğimiz veri üzerinden modeli oluşturuyoruz
                         {
                             CategoryDescription = category.Description,
                             CategoryName = category.Name,
@@ -190,6 +183,7 @@ namespace Business.Services.Report
             #endregion
 
             return query.ToList(); // ToList methodu ile sorgumuzu çalıştırıp sonucu List<ReportModel> tipinde methoddan dönüyoruz 
+
         }
     }
 }

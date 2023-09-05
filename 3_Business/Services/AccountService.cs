@@ -32,7 +32,7 @@ namespace Business.Services
 		{
 			// önce accountLoginModel üzerinden kullanıcının girmiş olduğu kullanıcı adı ve şifreye sahip aktif kullanıcı sorgusu üzerinden veriyi çekip user'a atıyoruz,
 			// kullanıcı adı ve şifre hassas veri olduğu için trim'lemiyoruz ve büyük küçük harf duyarlılığını da ortadan kaldırmıyoruz
-			var user = _userService.Query().SingleOrDefault(u => u.UserName == accountLoginModel.UserName && u.Password == accountLoginModel.Password && u.IsActive);
+			var user = _userService.Get(u => u.UserName == accountLoginModel.UserName && u.Password == accountLoginModel.Password && u.IsActive);
 
 			if (user is null) // eğer böyle bir kullanıcı bulunamadıysa
 				return new ErrorResult("Invalid user name or password!"); // kullanıcı adı veya şifre hatalı sonucunu dönüyoruz

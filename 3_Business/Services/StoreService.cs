@@ -1,6 +1,4 @@
-﻿using AppCore.Business.Services.Bases;
-using AppCore.DataAccess.EntityFramework.Bases;
-using AppCore.Results;
+﻿using AppCore.Results;
 using AppCore.Results.Bases;
 using Business.Models;
 using DataAccess.Entities;
@@ -52,6 +50,9 @@ namespace Business.Services
 
         public Result Delete(int id)
         {
+            var store = _storeRepo.Include(new List<string> { "ProductStores" }).Get(s => s.Id == id); 
+            if (store.ProductStores.Count > 0)
+                return new ErrorResult("Store can't be deleted because store has products!");
             _storeRepo.Delete(s => s.Id == id);
             return new SuccessResult();
         }
