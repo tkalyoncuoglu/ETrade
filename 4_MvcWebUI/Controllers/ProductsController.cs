@@ -1,5 +1,6 @@
 ﻿using AppCore.Results;
 using Business.Models;
+using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,9 +17,15 @@ namespace MvcWebUI.Controllers
     {
         private readonly IProductService _productService; // controller'da ürünle ilgili işleri gerçekleştirebilmek için servis alanı tanımlanır ve constructor üzerinden enjekte edilir.
 
-        public ProductsController(IProductService productService)
+        private readonly ICategoryService _categoryService; // controller'da kategori ile ilgili işleri gerçekleştirebilmek için servis alanı tanımlanır ve constructor üzerinden enjekte edilir.
+
+        private readonly IStoreService _storeService; // controller'da mağaza ile ilgili işleri gerçekleştirebilmek için servis alanı tanımlanır ve constructor üzerinden enjekte edilir.
+
+        public ProductsController(IProductService productService, ICategoryService categoryService, IStoreService storeService)
         {
             _productService = productService;
+            _categoryService = categoryService;
+            _storeService = storeService;
         }
 
 
@@ -30,7 +37,7 @@ namespace MvcWebUI.Controllers
                                      // bu adres için link oluşturularak çağrılabilir.
         {
             List<ProductModel> products = _productService.GetList(); // ToList LINQ (Language Integrated Query) methodu sorgunun çalıştırılmasını ve sonucunun IQueryable'da kullanılan tip
-                                                                            // üzerinden bir liste olarak dönmesini sağlar.
+                                                                     // üzerinden bir liste olarak dönmesini sağlar.
 
             //return View("ProductList", products); // *1
             return View(products); // *2
@@ -42,14 +49,14 @@ namespace MvcWebUI.Controllers
 
 
         // Authorize attribute'u yazılmadığı için controller'ın üzerindeki Authorize geçerli olacaktır.
-        public IActionResult Details(int id) 
+        public IActionResult Details(int id)
         {
             ProductModel? product = _productService.Get(id);
-            if (product is null) 
+            if (product is null)
             {
-                return View("_Error", "Product not found!"); 
+                return View("_Error", "Product not found!");
             }
-            return View(product); 
+            return View(product);
         }
 
 
@@ -63,7 +70,7 @@ namespace MvcWebUI.Controllers
                                       // bu adres için link oluşturularak çağrılabilir. Create view'ındaki form kullanıcıya dönülür ki kullanıcı veri girip sunucuya gönderebilsin.
                                       // Veritabanında yeni kayıt oluşturmak için kullanılır.
         {
-            ViewBag.Categories = new SelectList(_productService.GetCategories(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_categoryService.GetList(), "Id", "Name");
             // Eğer view'da kullanılacak model'den farklı bir tipte veriye ihtiyaç varsa ViewBag veya ViewData üzerinden gerek action'dan view'a gerekse view'lar arası
             // model verisi dışındaki veriler taşınabilir.
             // ViewBag ile ViewData aynı yapı olarak birbirlerinin yerlerine kullanılabilir, sadece kullanımları farklıdır. Örneğin ViewData["Categories"] olarak da burada kullanabilirdik.
@@ -71,7 +78,7 @@ namespace MvcWebUI.Controllers
             // kategori listemizi, listenin tipi (CategoryModel) üzerinden arka planda tutacağımız (yani kullanıcının görmeyeceği) özellik ismini (Id) ve
             // listenin tipi (CategoryModel) üzerinden kullanıcıya göstereceğimiz özellik ismini (Name) belirtiyoruz.
 
-            ViewBag.Stores = new MultiSelectList(_productService.GetStores(), "Id", "Name");
+            ViewBag.Stores = new MultiSelectList(_storeService.GetList(), "Id", "Name");
             // Tıpkı yukarıda kategori listesini bir drop down list üzerinden kullanıcıya gösterebilmek için bir SelectList oluşturduğumuz ve ViewBag'e attığımız gibi
             // mağazaları da ilgili servisi üzerinden çekip bir MultiSelectList'e doldurup ViewBag'e atıyoruz ki view'da kullanıcı List Box (multiple attribute'lu HTML select tag'i)
             // üzerinden hiç, bir veya daha çok mağaza seçebilsin.
@@ -102,17 +109,17 @@ namespace MvcWebUI.Controllers
         [Authorize(Roles = "Admin")] // controller üzerindeki Authorize sisteme giriş yapmış kullanıcılar içindi ancak biz bu action'ın
                                      // sadece Admin rolündekiler için çağrılabilmesini istiyoruz, bu yüzden action üzerinde
                                      // tekrar Authorize attribute'unu Admin rolüne göre tanımladık ve controller'dakini ezmiş olduk.
-        //public IActionResult Create(string Name, string Description, double? UnitPrice, int? StockAmount, DateTime? ExpirationDate, int? CategoryId, List<int> StoreIds)
-        // *1
-        //public IActionResult Create(ProductModel product)
-        // *1: bir yukarıdaki parametreler ProductModel'da özellik olarak bulunduğundan ProductModel tipinde model parametresi kullanıyoruz.
+                                     //public IActionResult Create(string Name, string Description, double? UnitPrice, int? StockAmount, DateTime? ExpirationDate, int? CategoryId, List<int> StoreIds)
+                                     // *1
+                                     //public IActionResult Create(ProductModel product)
+                                     // *1: bir yukarıdaki parametreler ProductModel'da özellik olarak bulunduğundan ProductModel tipinde model parametresi kullanıyoruz.
         public IActionResult Create(ProductModel product, IFormFile? image)
-		// *2: view'dan input name'i image type'ı file HTML input'u üzerinden imajı alıyoruz,
-		// image'ın IFormFile tipini kullanıcının imaj yükleme zorunluluğu olmadığı için nullable (?) tanımladık.
-		// form verileri name ile belirtilen input HTML elemanları üzerinden parametre olarak alınabildiği gibi bu özellikler ProductModel'in içerisinde olduğundan
-		// parametre olarak ProductModel tipinde bir product parametresi (model) de kullanılabilir. Genelde model kullanımı tercih edilir.
-		{
-			if (ModelState.IsValid) // eğer kullanıcıdan parametre olarak gelen product model verilerinde data annotation'lar üzerinden bir validasyon hatası yoksa
+        // *2: view'dan input name'i image type'ı file HTML input'u üzerinden imajı alıyoruz,
+        // image'ın IFormFile tipini kullanıcının imaj yükleme zorunluluğu olmadığı için nullable (?) tanımladık.
+        // form verileri name ile belirtilen input HTML elemanları üzerinden parametre olarak alınabildiği gibi bu özellikler ProductModel'in içerisinde olduğundan
+        // parametre olarak ProductModel tipinde bir product parametresi (model) de kullanılabilir. Genelde model kullanımı tercih edilir.
+        {
+            if (ModelState.IsValid) // eğer kullanıcıdan parametre olarak gelen product model verilerinde data annotation'lar üzerinden bir validasyon hatası yoksa
             {
                 Result result; // imaj yükleme ile ürün ekleme işlemleri sonucu
 
@@ -135,17 +142,17 @@ namespace MvcWebUI.Controllers
                     }
                 }
 
-				//ViewBag.Message = result.Message; // 1. yöntem: bu satırda servisten ErrorResult objesi dönmüş demektir, dolayısıyla sonucun mesajını Create view'ına bu şekilde
-				                                    // taşıyıp view'deki ViewBag.Message üzerinden gösterebiliriz
-				ModelState.AddModelError("", result.Message); // 2. daha iyi yöntem: view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
+                //ViewBag.Message = result.Message; // 1. yöntem: bu satırda servisten ErrorResult objesi dönmüş demektir, dolayısıyla sonucun mesajını Create view'ına bu şekilde
+                // taşıyıp view'deki ViewBag.Message üzerinden gösterebiliriz
+                ModelState.AddModelError("", result.Message); // 2. daha iyi yöntem: view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
                                                               // gösterimini sağlayabiliriz
             }
-            ViewBag.Categories = new SelectList(_productService.GetCategories(), "Id", "Name", product.CategoryId);
+            ViewBag.Categories = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Create view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.Stores = new MultiSelectList(_productService.GetStores(), "Id", "Name", product.StoreIds);
+            ViewBag.Stores = new MultiSelectList(_storeService.GetList(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 
@@ -168,12 +175,12 @@ namespace MvcWebUI.Controllers
                 return View("_Error", "Product not found!"); // ürün bulunamadı mesajını daha önce oluşturduğumuz _Error.cshtml view'ına gönderiyoruz
             }
 
-            ViewBag.CategoryId = new SelectList(_productService.GetCategories(), "Id", "Name", product.CategoryId);
+            ViewBag.CategoryId = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
             // view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini SelectList objesine doldurarak ViewBag'e atıyoruz,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden daha önce kaydetmiş olduğu kategorinin
             // CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.StoreIds = new MultiSelectList(_productService.GetStores(), "Id", "Name", product.StoreIds);
+            ViewBag.StoreIds = new MultiSelectList(_storeService.GetList(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 
@@ -200,15 +207,15 @@ namespace MvcWebUI.Controllers
                                      // sadece Admin rolündekiler için çağrılabilmesini istiyoruz, bu yüzden action üzerinde
                                      // tekrar Authorize attribute'unu Admin rolüne göre tanımladık ve controller'dakini ezmiş olduk.
         public IActionResult Edit(ProductModel product, IFormFile? image)
-		// view'dan input name'i image type'ı file HTML input'u üzerinden imajı alıyoruz,
-		// image'ın IFormFile tipini kullanıcının imaj yükleme zorunluluğu olmadığı için nullable (?) tanımladık.
-		{
-			if (ModelState.IsValid) // eğer kullanıcıdan parametre olarak gelen product model verilerinde data annotation'lar üzerinden bir validasyon hatası yoksa
-			{
+        // view'dan input name'i image type'ı file HTML input'u üzerinden imajı alıyoruz,
+        // image'ın IFormFile tipini kullanıcının imaj yükleme zorunluluğu olmadığı için nullable (?) tanımladık.
+        {
+            if (ModelState.IsValid) // eğer kullanıcıdan parametre olarak gelen product model verilerinde data annotation'lar üzerinden bir validasyon hatası yoksa
+            {
                 Result result; // imaj yükleme ile ürün güncelleme işlemleri sonucu
 
-				// imaj yükleme
-				result = UpdateImage(product, image);
+                // imaj yükleme
+                result = UpdateImage(product, image);
 
                 if (result.IsSuccessful) // eğer imaj null gönderildiyse veya UpdateImage içerisindeki validasyonlardan geçip product modelimiz güncellendiyse
                 {
@@ -220,28 +227,28 @@ namespace MvcWebUI.Controllers
                                                               // veya ViewData ile taşıyamayacağımızdan TempData üzerinden taşıyoruz
 
                         //return RedirectToAction(nameof(Index)); // son olarak bu controller'ın Index action'ına yönlendiriyoruz ki veriler o action'da
-                                                                  // veritabanından tekrar çekilip Index view'ında listelenebilsin
-                         return RedirectToAction(nameof(Details), new { id = product.Id }); // alternatif olarak kullanıcıyı güncellenen ürün id'sini
-																					        // route value olarak kullanarak Details action'ına yönlendirip
-																					        // güncelleme sonucunu detay sayfasında görmesini sağlayabiliriz
+                        // veritabanından tekrar çekilip Index view'ında listelenebilsin
+                        return RedirectToAction(nameof(Details), new { id = product.Id }); // alternatif olarak kullanıcıyı güncellenen ürün id'sini
+                                                                                           // route value olarak kullanarak Details action'ına yönlendirip
+                                                                                           // güncelleme sonucunu detay sayfasında görmesini sağlayabiliriz
                     }
                 }
 
-				ModelState.AddModelError("", result.Message); // view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
-															  // gösterimini sağlayabiliriz
-			}
-			ViewBag.CategoryId = new SelectList(_productService.GetCategories(), "Id", "Name", product.CategoryId);
+                ModelState.AddModelError("", result.Message); // view'da validation summary kullandığımız için hata sonucunun mesajının bu şekilde validation summary'de
+                                                              // gösterimini sağlayabiliriz
+            }
+            ViewBag.CategoryId = new SelectList(_categoryService.GetList(), "Id", "Name", product.CategoryId);
             // bu satırda model validasyondan geçememiş demektir
             // Edit view'ını tekrar döneceğimiz için view'da select HTML tag'inde (drop down list) kullandığımız kategori listesini tekrar doldurmak zorundayız,
             // new SelectList'teki son parametre kategori listesinde kullanıcının product model üzerinden seçmiş olduğu kategorinin CategoryId üzerinden seçilmesini sağlar
 
-            ViewBag.StoreIds = new MultiSelectList(_productService.GetStores(), "Id", "Name", product.StoreIds);
+            ViewBag.StoreIds = new MultiSelectList(_storeService.GetList(), "Id", "Name", product.StoreIds);
             // view'da multiple attribute'lu select HTML tag'inde (list box) kullandığımız mağaza listesini tekrar doldurmak zorundayız,
             // new MultiSelectList'teki son parametre mağaza listesinde kullanıcının product model üzerinden seçmiş olduğu mağazaların StoreIds üzerinden seçilmesini sağlar
 
             return View(product); // bu action'a parametre olarak gelen ve kullanıcının view üzerinden doldurduğu product modelini tekrar kullanıcıya gönderiyoruz ki
-								  // kullanıcı view'da girdiği verileri kaybetmesin ve hataları giderip tekrar işlem yapabilsin
-		}
+                                  // kullanıcı view'da girdiği verileri kaybetmesin ve hataları giderip tekrar işlem yapabilsin
+        }
 
 
 
@@ -278,7 +285,7 @@ namespace MvcWebUI.Controllers
             Result result = _productService.Delete(id); // view'dan parametre olarak gelen id üzerinden ürün kaydını siliyoruz.
 
             TempData["Message"] = result.Message; // Index view'ında silme sonucunu gösterebilmek için dönen sonuç mesajını TempData'ya atıyoruz.
-            
+
             return RedirectToAction(nameof(Index)); // Index action'ına yönlendirme yaparak verilerin tekrar veritabanından çekilip listelenmesini sağlıyoruz.
         }
 
@@ -319,7 +326,7 @@ namespace MvcWebUI.Controllers
                 // (kabul edilen dosya uzantıları için aie delegesi üzerinden önce case insensitive yani büyük küçük harf duyarsız yaparak
                 // sonra da boşlukları temizleyerek yüklenen dosya uzantısını da case insensitive yapıp Any methodu ile
                 // herhangi bir eşleşme var mı diye kontrol edip if içerisindeki koşulun komple değilini alıyoruz)
-                if (!AppSettings.AcceptedImageExtensions.Split(',').Any(aie => aie.ToLower().Trim() == uploadedFileExtension.ToLower())) 
+                if (!AppSettings.AcceptedImageExtensions.Split(',').Any(aie => aie.ToLower().Trim() == uploadedFileExtension.ToLower()))
                 {
                     // yüklenen imaj uzantısının kabul edilen imaj uzantıları içerisinde olmadığı mesajını ErrorResult objesi oluşturarak result'a atıyoruz
                     result = new ErrorResult("Image can't be uploaded because image extension is not in \"" + ".jpg, .jpeg, .png" + "\"!"); // \": çift tırnak escape sequence
@@ -371,15 +378,15 @@ namespace MvcWebUI.Controllers
 
 
 
-		#region IActionResult'ı implemente eden class'lar ve bu class tiplerini dönen methodlar
-		/*
+        #region IActionResult'ı implemente eden class'lar ve bu class tiplerini dönen methodlar
+        /*
         IActionResult
         |
         ActionResult
         |
         ViewResult (View()) - ContentResult (Content()) - EmptyResult - FileContentResult (File()) - HttpResults - JavaScriptResult (JavaScript()) - JsonResult (Json()) - RedirectResults
         */
-		public ContentResult GetHtmlContent() // tarayıcıda çağrılması: ~/Products/GetHtmlContent
+        public ContentResult GetHtmlContent() // tarayıcıda çağrılması: ~/Products/GetHtmlContent
         {
             //return new ContentResult(); // ContentResult objesini new'leyerek dönmek yerine aşağıdaki methodu kullanılmalıdır.
             return Content("<b><i>Content result.</i></b>", "text/html"); // içerik tipi text/html belirtilmelidir ki tarayıcı HTML olarak yorumlayabilsin,

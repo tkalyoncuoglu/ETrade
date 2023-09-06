@@ -2,8 +2,9 @@
 using Business.Models;
 using DataAccess.Entities;
 using Repositories.Abstract;
-using Results;
 using Services.Abstract;
+using Results;
+
 
 namespace Services.Concrete
 {
@@ -17,17 +18,10 @@ namespace Services.Concrete
 
         private readonly IProductStoreRepository _productStoreRepository;
 
-        private readonly ICategoryService _categoryService;
-
-        private readonly IStoreService _storeService;
-
-        public ProductService(IProductRepository productRepository, IProductStoreRepository productStoreRepository,
-            ICategoryService categoryService, IStoreService storeService)
+        public ProductService(IProductRepository productRepository, IProductStoreRepository productStoreRepository)
         {
             _productRepository = productRepository;
             _productStoreRepository = productStoreRepository;
-            _categoryService = categoryService;
-            _storeService = storeService;
         }
 
 
@@ -249,16 +243,6 @@ namespace Services.Concrete
             };
 
 
-        }
-
-        public List<StoreModel> GetStores()
-        {
-            return _storeService.GetList();
-        }
-
-        public List<CategoryModel> GetCategories()
-        {
-            return _categoryService.GetList();
         }
     }
 }

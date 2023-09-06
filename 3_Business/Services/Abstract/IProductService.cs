@@ -1,5 +1,6 @@
 ﻿using Business.Models;
 using Results;
+using Services.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,6 @@ namespace Services.Abstract
     public interface IProductService : IGenericService<ProductModel>
     {
         Result DeleteImage(int id);
-        List<StoreModel> GetStores();
-        List<CategoryModel> GetCategories();
     }
 
 }
