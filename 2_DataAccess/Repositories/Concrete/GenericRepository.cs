@@ -1,4 +1,4 @@
-﻿using AppCore.Records.Bases;
+﻿using Business.Records.Bases;
 using DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Abstract;
@@ -56,8 +56,6 @@ namespace Repositories.Concrete
 
         public void Add(T entity)
         {
-            entity.Guid = Guid.NewGuid().ToString();
-
             _context.Add(entity);
 
             _context.SaveChanges();

@@ -1,6 +1,6 @@
-﻿using Results;
+﻿using Business.Results;
 
-namespace AppCore.Results
+namespace Business.Results
 {
     public class ErrorResult : Result // servis class'larında çeşitli methodlardan başarısız olarak dönecek işlem sonucu class'ı
     {

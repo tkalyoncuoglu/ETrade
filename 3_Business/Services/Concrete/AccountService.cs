@@ -1,9 +1,9 @@
-﻿using AppCore.Results;
+﻿using Business.Results;
 using Business.Models;
 using Business.Models.Account;
 using Business.Services.Abstract;
 using DataAccess.Enums;
-using Results;
+using Business.Results;
 using Services.Abstract;
 
 namespace Services.Concrete
@@ -50,7 +50,7 @@ namespace Services.Concrete
                 Password = accountRegisterModel.Password,
                 UserName = accountRegisterModel.UserName,
 
-                RoleId = (int)Roles.Admin, // Roles enum'ı üzerinden RoleId'yi atamak hem veritabanındaki rol tablosundaki id'ler güncellenirse bu enum üzerinden
+                RoleId = _userService.GetRoleByName("Admin"), // Roles enum'ı üzerinden RoleId'yi atamak hem veritabanındaki rol tablosundaki id'ler güncellenirse bu enum üzerinden
                                            // kolayca bu değişikliğin uygulanabilmesini hem de her bir rolün id'si neydi diye veritabanındaki tabloya
                                            // sürekli bakılmasından kurtulmamızı sağlar
 

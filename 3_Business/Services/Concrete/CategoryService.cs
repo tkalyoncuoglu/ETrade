@@ -1,9 +1,9 @@
-﻿using AppCore.Results;
+﻿using Business.Results;
 using Business.Models;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Abstract;
-using Results;
+using Business.Results;
 using Services.Abstract;
 
 namespace Services.Concrete
@@ -36,7 +36,6 @@ namespace Services.Concrete
             return new CategoryModel()
             {
                 Description = c.Description,
-                Guid = c.Guid,
                 Id = c.Id,
                 Name = c.Name,
                 ProductsCount = c.Products.Count

@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using AppCore.Records.Bases;
+using Business.Records.Bases;
 using DataAccess.Enums;
 using System.ComponentModel.DataAnnotations;
 

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace _2_DataAccess.Migrations
 {
     /// <inheritdoc />
@@ -18,8 +20,7 @@ namespace _2_DataAccess.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    Description = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,8 +33,7 @@ namespace _2_DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,8 +46,7 @@ namespace _2_DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,8 +60,7 @@ namespace _2_DataAccess.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    IsVirtual = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    IsVirtual = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,8 +80,7 @@ namespace _2_DataAccess.Migrations
                     ExpirationDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: true),
                     Image = table.Column<byte[]>(type: "image", nullable: true),
-                    ImageExtension = table.Column<string>(type: "TEXT", maxLength: 5, nullable: true),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    ImageExtension = table.Column<string>(type: "TEXT", maxLength: 5, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,8 +99,7 @@ namespace _2_DataAccess.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    CountryId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    CountryId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,8 +120,7 @@ namespace _2_DataAccess.Migrations
                     UserName = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
                     Password = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,12 +136,14 @@ namespace _2_DataAccess.Migrations
                 name: "ProductStores",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: false),
                     StoreId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductStores", x => new { x.ProductId, x.StoreId });
+                    table.PrimaryKey("PK_ProductStores", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ProductStores_Products_ProductId",
                         column: x => x.ProductId,
@@ -171,8 +168,7 @@ namespace _2_DataAccess.Migrations
                     Phone = table.Column<string>(type: "TEXT", maxLength: 25, nullable: true),
                     Address = table.Column<string>(type: "TEXT", maxLength: 750, nullable: false),
                     CountryId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CityId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Guid = table.Column<string>(type: "TEXT", nullable: true)
+                    CityId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -195,6 +191,15 @@ namespace _2_DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Admin" },
+                    { 2, "User" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_CountryId",
                 table: "Cities",
@@ -209,6 +214,11 @@ namespace _2_DataAccess.Migrations
                 name: "IX_Products_Name",
                 table: "Products",
                 column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductStores_ProductId",
+                table: "ProductStores",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductStores_StoreId",

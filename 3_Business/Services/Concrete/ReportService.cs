@@ -19,7 +19,7 @@ namespace Services.Concrete
 
         public List<ReportItemModel> GetList(ReportFilterModel filter, bool useInnerJoin = false)
         {
-            var reportFilter = new ReportFilter()
+            var reportFilter = filter is not null ? new ReportFilter()
             {
                 CategoryId = filter.CategoryId,
                 ProductName = filter.ProductName,
@@ -30,7 +30,7 @@ namespace Services.Concrete
                 ExpirationDateBegin = filter.ExpirationDateBegin,
                 ExpirationDateEnd = filter.ExpirationDateEnd,
                 StoreIds = filter.StoreIds
-            };
+            } : null;
 
             var r = _repo.GetList(reportFilter);
 

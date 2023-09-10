@@ -1,6 +1,6 @@
-﻿using Results;
+﻿
 
-namespace AppCore.Results
+namespace Business.Results
 {
     public class SuccessResult : Result // servis class'larında çeşitli methodlardan başarılı olarak dönecek işlem sonucu class'ı
     {

@@ -9,5 +9,6 @@ namespace Repositories.Abstract
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        int GetRoleId(string name);
     }
 }

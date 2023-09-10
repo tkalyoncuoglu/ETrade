@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using AppCore.Records.Bases;
+using Business.Records.Bases;
 using System.ComponentModel;
 
 namespace Business.Models

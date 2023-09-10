@@ -37,7 +37,6 @@ namespace Services.Concrete
             {
                 CountryId = c.CountryId,
                 Name = c.Name,
-                Guid = c.Guid,
                 Id = c.Id
             };
 

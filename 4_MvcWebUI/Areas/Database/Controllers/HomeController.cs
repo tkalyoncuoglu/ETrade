@@ -46,20 +46,7 @@ namespace MvcWebUI.Areas.Database.Controllers
 			var users = _db.Users.ToList();
             _db.Users.RemoveRange(users);
 
-            var roles = _db.Roles.ToList();
-            _db.Roles.RemoveRange(roles);
-
-            if (roles.Count > 0) // eğer veritabanında rol kaydı varsa eklenecek rollerin rol id'lerini aşağıdaki SQL komutu üzerinden 1'den başlayacak hale getiriyoruz
-                                 // eğer kayıt yoksa o zaman zaten rol tablosuna daha önce veri eklenmemiştir dolayısıyla rol id'leri 1'den başlayacaktır
-            {
-                _db.Database.ExecuteSqlRaw("dbcc CHECKIDENT ('Roles', RESEED, 0)"); // ExecuteSqlRaw methodu üzerinden istenilen SQL sorgusu elle yazılıp veritabanında çalıştırılabilir
-            }
-
-			var cities = _db.Cities.ToList();
-			_db.Cities.RemoveRange(cities);
-
-			var countries = _db.Countries.ToList();
-			_db.Countries.RemoveRange(countries);
+			
 			#endregion
 
 
@@ -197,85 +184,10 @@ namespace MvcWebUI.Areas.Database.Controllers
                 }
             });
 
-			_db.Countries.Add(new Country()
-			{
-				Name = "United States",
-				Cities = new List<City>()
-				{
-					new City()
-					{
-						Name = "Los Angeles"
-					},
-					new City()
-					{
-						Name = "New York"
-					}
-				}
-			});
-			_db.Countries.Add(new Country()
-			{
-				Name = "Turkey",
-				Cities = new List<City>()
-				{
-					new City()
-					{
-						Name = "Ankara"
-					},
-					new City()
-					{
-						Name = "Istanbul"
-					},
-					new City()
-					{
-						Name = "Izmir"
-					}
-				}
-			});
-
 			_db.SaveChanges();
 
-			_db.Roles.Add(new Role()
-            {
-                Name = "Admin",
-                Users = new List<User>()
-                {
-                    new User()
-                    {
-                        IsActive = true,
-                        Password = "cagil",
-                        UserName = "cagil",
-						UserDetail = new UserDetail()
-						{
-							Address = "Cankaya",
-							CityId = _db.Cities.SingleOrDefault(c => c.Name == "Ankara").Id,
-							CountryId = _db.Countries.SingleOrDefault(c => c.Name == "Turkey").Id,
-							Email = "cagil@etrade.com",
-							Sex = Sex.Man
-						}
-					}
-                }
-            });
-            _db.Roles.Add(new Role()
-            {
-                Name = "User",
-                Users = new List<User>()
-                {
-                    new User()
-                    {
-                        IsActive = true,
-                        Password = "leo",
-                        UserName = "leo",
-						UserDetail = new UserDetail()
-						{
-							Address = "Hollywood",
-							CityId = _db.Cities.SingleOrDefault(c => c.Name == "Los Angeles").Id,
-							CountryId = _db.Countries.SingleOrDefault(c => c.Name == "United States").Id,
-							Email = "leo@etrade.com",
-							Sex = Sex.Man
-						}
-					}
-                }
-            });
+			
+            
             #endregion
 
 

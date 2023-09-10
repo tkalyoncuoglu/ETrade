@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace _2_DataAccess.Migrations
 {
     [DbContext(typeof(ETradeContext))]
-    [Migration("20230905142022_FourthMigration")]
-    partial class FourthMigration
+    [Migration("20230910155646_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,6 @@ namespace _2_DataAccess.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -51,9 +48,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("CountryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -71,9 +65,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -99,9 +90,6 @@ namespace _2_DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("Image")
@@ -137,9 +125,6 @@ namespace _2_DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
@@ -161,9 +146,6 @@ namespace _2_DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -172,6 +154,18 @@ namespace _2_DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Store", b =>
@@ -179,9 +173,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsVirtual")
                         .HasColumnType("INTEGER");
@@ -201,9 +192,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -248,9 +236,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")

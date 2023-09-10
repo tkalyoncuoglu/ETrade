@@ -1,8 +1,8 @@
 ﻿#nullable disable
 
-using AppCore;
 
-namespace Results
+
+namespace Business.Results
 {
     public abstract class Result // servis class'larında çeşitli methodlardan sonuç olarak dönmek, ve başarılı ile başarısız işlem sonuçları için kullanılacak base class
     {

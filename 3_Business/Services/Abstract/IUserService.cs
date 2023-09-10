@@ -1,6 +1,6 @@
 ﻿using Business.Models;
 using DataAccess.Entities;
-using Results;
+using Business.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +14,7 @@ namespace Business.Services.Abstract
         Result Add(UserModel model); // Create işlemleri
 
         UserModel? Get(Expression<Func<User, bool>> expression);
+
+        int GetRoleByName(string roleName);
     }
 }

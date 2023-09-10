@@ -132,7 +132,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
 
 // Eðer istenirse AppCore -> App -> Environment class'ý altýndaki IsDevelopment özelliði burada atanarak örneðin Views -> Shared -> _Layout.cshtml
 // view'ýnda sadece development ortamý için Seed Database link'inin gelmesi saðlanabilir.
-AppCore.App.Environment.IsDevelopment = app.Environment.IsDevelopment();
+Business.App.Environment.IsDevelopment = app.Environment.IsDevelopment();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

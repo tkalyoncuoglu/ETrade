@@ -1,8 +1,8 @@
-﻿using AppCore.Results;
+﻿using Business.Results;
 using Business.Models;
 using DataAccess.Entities;
 using Repositories.Abstract;
-using Results;
+using Business.Results;
 using Services.Abstract;
 
 namespace Services.Concrete
@@ -53,7 +53,6 @@ namespace Services.Concrete
         {
             return new StoreModel()
             {
-                Guid = s.Guid,
                 Id = s.Id,
                 Name = s.Name,
                 IsVirtual = s.IsVirtual,

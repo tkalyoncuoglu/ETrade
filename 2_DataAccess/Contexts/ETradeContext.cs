@@ -2,6 +2,7 @@
 
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace DataAccess.Contexts
 {
@@ -24,13 +25,7 @@ namespace DataAccess.Contexts
             optionsBuilder.UseSqlite("Data Source=mydatabase.db");
         }
 
-        public ETradeContext(DbContextOptions options) : base(options) // options parametresi MvcWebUI katmanındaki Program.cs IoC Container'ında AddDbContext methodu ile
-                                                                       // bağımlılığı yönetilen ve appsettings.json veya appsettings.Development.json dosyalarında
-                                                                       // tanımlanmış connection string'i bu class'ın constructor'ına, dolayısıyla esas veritabanı
-                                                                       // işlemlerini yapacak olan DbContext class'ının constructor'ına taşır. Genelde bu kullanım tercih edilir.
-        {
-
-        }
+        
 
 
 
@@ -109,6 +104,25 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<UserDetail>() // eğer istenirse entity özelliği üzerinden ilgili tablosundaki verilerinin tekil olması IsUnique methodu ile sağlanabilir
                 .HasIndex(ud => ud.Email)
                 .IsUnique(true);
-		}
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, Name = "Admin" },
+                new Role { Id = 2, Name = "User" }
+                );
+
+            modelBuilder.Entity<Country>().HasData(
+                new Country { Id = 1, Name = "United States" },
+                new Country { Id = 2, Name = "Turkey" }
+                );
+
+            modelBuilder.Entity<City>().HasData(
+                new City { Id = 1, CountryId = 1, Name = "Los Angeles" },
+                new City { Id = 2, CountryId = 1, Name = "New York" },
+                new City { Id = 3, CountryId = 2, Name = "Ankara" },
+                new City { Id = 4, CountryId = 2, Name = "Los Angeles" },
+                new City { Id = 5, CountryId = 2, Name = "İzmir" }
+                );
+
+        }
     }
 }

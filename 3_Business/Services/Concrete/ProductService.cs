@@ -1,9 +1,9 @@
-﻿using AppCore.Results;
+﻿using Business.Results;
 using Business.Models;
 using DataAccess.Entities;
 using Repositories.Abstract;
 using Services.Abstract;
-using Results;
+using Business.Results;
 
 
 namespace Services.Concrete
@@ -152,7 +152,6 @@ namespace Services.Concrete
                 CategoryId = product.CategoryId,
                 Description = product.Description,
                 ExpirationDate = product.ExpirationDate,
-                Guid = product.Guid,
                 Id = product.Id,
                 Name = product.Name,
                 StockAmount = product.StockAmount,

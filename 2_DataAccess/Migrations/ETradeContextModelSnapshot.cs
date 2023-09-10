@@ -26,9 +26,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -48,9 +45,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("CountryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -61,6 +55,38 @@ namespace _2_DataAccess.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CountryId = 1,
+                            Name = "Los Angeles"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CountryId = 1,
+                            Name = "New York"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CountryId = 2,
+                            Name = "Ankara"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CountryId = 2,
+                            Name = "Los Angeles"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CountryId = 2,
+                            Name = "İzmir"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Country", b =>
@@ -68,9 +94,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -80,6 +103,18 @@ namespace _2_DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "United States"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Turkey"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Product", b =>
@@ -96,9 +131,6 @@ namespace _2_DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("Image")
@@ -134,9 +166,6 @@ namespace _2_DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
@@ -158,9 +187,6 @@ namespace _2_DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -169,6 +195,18 @@ namespace _2_DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Store", b =>
@@ -176,9 +214,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsVirtual")
                         .HasColumnType("INTEGER");
@@ -198,9 +233,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -245,9 +277,6 @@ namespace _2_DataAccess.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")

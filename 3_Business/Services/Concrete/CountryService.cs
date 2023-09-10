@@ -42,7 +42,6 @@ namespace Services.Concrete
             return new CountryModel
             {
                 Name = c.Name,
-                Guid = c.Guid,
                 Id = c.Id
             };
 

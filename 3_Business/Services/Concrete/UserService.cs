@@ -1,9 +1,9 @@
-﻿using AppCore.Results;
+﻿using Business.Results;
 using Business.Models;
 using Business.Services.Abstract;
 using DataAccess.Entities;
 using Repositories.Abstract;
-using Results;
+using Business.Results;
 using System.Linq.Expressions;
 
 namespace Services.Concrete
@@ -61,7 +61,6 @@ namespace Services.Concrete
             }
             return new UserModel()
             {
-                Guid = u.Guid,
                 Id = u.Id,
                 IsActive = u.IsActive,
                 Password = u.Password,
@@ -95,6 +94,9 @@ namespace Services.Concrete
             };
         }
 
-
+        public int GetRoleByName(string roleName)
+        {
+            return _userRepo.GetRoleId(roleName);
+        }
     }
 }

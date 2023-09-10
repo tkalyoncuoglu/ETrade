@@ -1,11 +1,11 @@
-﻿using AppCore.Results;
+﻿using Business.Results;
 using Business.Models;
 using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MvcWebUI.Settings;
-using Results;
+using Business.Results;
 using Services.Abstract;
 
 namespace MvcWebUI.Controllers

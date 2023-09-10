@@ -52,7 +52,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between ps-5"><!-- ps-5: padding-left 5 birim -->
                     <ul class="navbar-nav flex-grow-1 ms-5"><!-- ms-5: margin-left 5 birim -->
 
-                        @if (AppCore.App.Environment.IsDevelopment)
+                        @if (Business.App.Environment.IsDevelopment)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-danger" asp-area="Database" asp-controller="Home" asp-action="Index"><i class="bi bi-exclamation-circle fs-6"></i> Seed Database</a>
